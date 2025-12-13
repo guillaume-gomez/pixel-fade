@@ -18,7 +18,9 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
-      <ThreejsRenderer backgroundColor="red" />
+      <div style={{width: "800px", height: "100vh", background: "transparent"}}>
+        <ThreejsRenderer backgroundColor="red" />
+      </div>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
