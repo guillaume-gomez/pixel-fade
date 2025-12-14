@@ -43,7 +43,7 @@ export default function instancedBufferGeometry(props) {
             positions[count + 1] = circle.position[1]
             positions[count + 2] = circle.position[2]
 
-            scales[i] = circle.radius
+            scales[i] = Math.random();
 
             count += 3
         })
