@@ -1,6 +1,10 @@
 import React, {useMemo} from "react";
 import pack from "pack-spheres"
-import {SphereGeometry, GLSL3, BufferAttribute, InstancedBufferAttribute, InstancedBufferGeometry, Vector2} from "three"
+import {SphereGeometry, GLSL3, BufferAttribute, InstancedBufferAttribute, InstancedBufferGeometry, Vector2, PlaneGeometry} from "three"
+
+function randomInteger(min: number, max: number) {
+   return Math.random() * (max - min) + min;
+}
 
 interface instancedBufferGeometryProps {
     width: number;
@@ -71,58 +75,65 @@ export default function instancedBufferGeometry({width, height, ...props} : inst
     // }
 
      const {
-        numInstances = 1000,
+        numInstances = width * height, //1000,
         dimensions = 3,
         packAttempts = 500,
         minRadius = 0.05,
         maxRadius = 0.5,
         padding = 0.0025,
-        widthSegments = 32,
-        heightSegments = 16
-    } = props
+        widthSegments = 1,
+        heightSegments = 1
+    } = props;
 
     // Builds instanced data for the packing
     const objectData = useMemo(() => {
-        let sphere = new SphereGeometry(1, widthSegments, heightSegments);
-
-        const settings = {
-            dimensions,
-            packAttempts,
-            maxCount: numInstances,
-            minRadius,
-            maxRadius,
-            padding
-        }
-
-        // generate scale/radius + positions
-        const circles = pack(settings)
-        console.log(circles)
-        
+        let plane = new PlaneGeometry(1, 1, widthSegments, heightSegments);
+        console.log(plane.attributes)
         // setup arrays
         let positions = new Float32Array(numInstances * 3)
         let scales = new Float32Array(numInstances)
 
         // Build per-instance attributes. 
         let count = 0
-        circles.forEach((circle, i) => {
-            positions[count] = circle.position[0]
-            positions[count + 1] = circle.position[1]
-            positions[count + 2] = circle.position[2]
+        for(let i= 0; i < numInstances; i++) {
+            positions[count] = randomInteger(-2, 2);
+            positions[count + 1] = randomInteger(-2, 2);
+            positions[count + 2] = randomInteger(-2, 2);
 
-            scales[i] = circle.radius
+            scales[i] = Math.random() * 0.1;
 
-            count += 3
-        })
+            count += 3 
+        }
 
-        let ipositions = new InstancedBufferAttribute(positions, 3)
-        let iscales = new InstancedBufferAttribute(scales, 1)
+        let ipositions = new InstancedBufferAttribute(positions, 3);
+        let iscales = new InstancedBufferAttribute(scales, 1);
+
+        // positions
+        const positions2 = new BufferAttribute(new Float32Array(4 * 3), 3);
+        positions2.setXYZ(0, -0.5, 0.5, 0.0);
+        positions2.setXYZ(1, 0.5, 0.5, 0.0);
+        positions2.setXYZ(2, -0.5, -0.5, 0.0);
+        positions2.setXYZ(3, 0.5, -0.5, 0.0);
+        
+        // uvs
+        const uvs = new BufferAttribute(new Float32Array(4 * 2), 2);
+        uvs.setXYZ(0, 0.0, 0.0);
+        uvs.setXYZ(1, 1.0, 0.0);
+        uvs.setXYZ(2, 0.0, 1.0);
+        uvs.setXYZ(3, 1.0, 1.0);
+        
+        // index
+        const index = new BufferAttribute(new Uint16Array([ 0, 2, 1, 2, 3, 1 ]), 1);
         
         return {
-            index: sphere.index,
+            index: plane.index,
             attribs: {
                 iPosition: ipositions,
                 iScale: iscales,
-                ...sphere.attributes
+                ...plane.attributes
+                // position: positions2,
+                // uv: uvs,
+                // index
             }
         }
     }, [])
