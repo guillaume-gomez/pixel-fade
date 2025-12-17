@@ -8,14 +8,14 @@ function randomInteger(min: number, max: number) {
 
 interface instancedBufferGeometryProps {
     width: number;
-    height: number
+    height: number;
+    base64Texture: string
 }
 
-export default function instancedBufferGeometry({width, height, ...props} : instancedBufferGeometryProps) {
-    // const numInstances = width * height;
+export default function instancedBufferGeometry({width, height, base64Texture, ...props} : instancedBufferGeometryProps) {
+    const numInstances = width * height;
     // const objectData = useMemo(() => {
-    //     const numPoints = width * height;
-    //     const data = init(numPoints);
+    //     const data = init(numInstances);
     //     return data;
     // }, [width, height]);
 
@@ -75,7 +75,6 @@ export default function instancedBufferGeometry({width, height, ...props} : inst
     // }
 
      const {
-        numInstances = width * height, //1000,
         dimensions = 3,
         packAttempts = 500,
         minRadius = 0.05,
@@ -96,34 +95,17 @@ export default function instancedBufferGeometry({width, height, ...props} : inst
         // Build per-instance attributes. 
         let count = 0
         for(let i= 0; i < numInstances; i++) {
-            positions[count] = randomInteger(-2, 2);
-            positions[count + 1] = randomInteger(-2, 2);
-            positions[count + 2] = randomInteger(-2, 2);
+            positions[count] = i % width;
+            positions[count + 1] = Math.floor(i / width);;
+            positions[count + 2] = 0//randomInteger(-2, 2);
 
-            scales[i] = Math.random() * 0.1;
+            scales[i] = Math.random();
 
             count += 3 
         }
 
-        let ipositions = new InstancedBufferAttribute(positions, 3);
-        let iscales = new InstancedBufferAttribute(scales, 1);
-
-        // positions
-        const positions2 = new BufferAttribute(new Float32Array(4 * 3), 3);
-        positions2.setXYZ(0, -0.5, 0.5, 0.0);
-        positions2.setXYZ(1, 0.5, 0.5, 0.0);
-        positions2.setXYZ(2, -0.5, -0.5, 0.0);
-        positions2.setXYZ(3, 0.5, -0.5, 0.0);
-        
-        // uvs
-        const uvs = new BufferAttribute(new Float32Array(4 * 2), 2);
-        uvs.setXYZ(0, 0.0, 0.0);
-        uvs.setXYZ(1, 1.0, 0.0);
-        uvs.setXYZ(2, 0.0, 1.0);
-        uvs.setXYZ(3, 1.0, 1.0);
-        
-        // index
-        const index = new BufferAttribute(new Uint16Array([ 0, 2, 1, 2, 3, 1 ]), 1);
+        const ipositions = new InstancedBufferAttribute(positions, 3);
+        const iscales = new InstancedBufferAttribute(scales, 1);
         
         return {
             index: plane.index,
@@ -131,9 +113,6 @@ export default function instancedBufferGeometry({width, height, ...props} : inst
                 iPosition: ipositions,
                 iScale: iscales,
                 ...plane.attributes
-                // position: positions2,
-                // uv: uvs,
-                // index
             }
         }
     }, [])
@@ -157,9 +136,20 @@ export default function instancedBufferGeometry({width, height, ...props} : inst
         in float iScale;
         out float vScale;
         out vec3 vPos;
+        
         uniform mat4 projectionMatrix;
         uniform mat4 viewMatrix;
+
+        uniform vec2 uTextureSize;
+
+        out vec2 vPUv;
+        out vec2 vUv;
+
         void main(){
+            vUv = uv;
+            //vec2 puv = offset.xy / uTextureSize;
+            //vPUv = puv;
+
             vec3 p = position;
             p.x *= iScale;
             p.y *= iScale;
@@ -174,6 +164,9 @@ export default function instancedBufferGeometry({width, height, ...props} : inst
 
     const fragment = `
         precision highp float;
+
+        in vec2 vPUv;
+        in vec2 vUv;
         
         in float vScale;
         in vec3 vPos;
