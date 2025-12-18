@@ -1,6 +1,15 @@
 import React, {useMemo} from "react";
-import pack from "pack-spheres"
-import {SphereGeometry, GLSL3, BufferAttribute, InstancedBufferAttribute, InstancedBufferGeometry, Vector2, PlaneGeometry} from "three"
+import { useLoader } from '@react-three/fiber';
+import {
+    SphereGeometry,
+    GLSL3,
+    BufferAttribute,
+    InstancedBufferAttribute,
+    InstancedBufferGeometry,
+    Vector2,
+    PlaneGeometry,
+    TextureLoader
+} from "three";
 
 function randomInteger(min: number, max: number) {
    return Math.random() * (max - min) + min;
@@ -13,7 +22,9 @@ interface instancedBufferGeometryProps {
 }
 
 export default function instancedBufferGeometry({width, height, base64Texture, ...props} : instancedBufferGeometryProps) {
+    const [texture] = useLoader(TextureLoader, [base64Texture]);
     const numInstances = width * height;
+
     // const objectData = useMemo(() => {
     //     const data = init(numInstances);
     //     return data;
@@ -89,8 +100,9 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
         let plane = new PlaneGeometry(1, 1, widthSegments, heightSegments);
         console.log(plane.attributes)
         // setup arrays
-        let positions = new Float32Array(numInstances * 3)
-        let scales = new Float32Array(numInstances)
+        let positions = new Float32Array(numInstances * 3);
+        let scales = new Float32Array(numInstances);
+        let angles = new Float32Array(numInstances);
 
         // Build per-instance attributes. 
         let count = 0
@@ -100,18 +112,21 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
             positions[count + 2] = 0//randomInteger(-2, 2);
 
             scales[i] = Math.random();
+            angles[i] = Math.random() * Math.PI;
 
             count += 3 
         }
 
         const ipositions = new InstancedBufferAttribute(positions, 3);
         const iscales = new InstancedBufferAttribute(scales, 1);
+        const iAngles = new InstancedBufferAttribute(angles, 1);
         
         return {
             index: plane.index,
             attribs: {
                 iPosition: ipositions,
                 iScale: iscales,
+                iAngles: iAngles,
                 ...plane.attributes
             }
         }
@@ -123,37 +138,41 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
         uDepth: { value: 2.0 },
         uSize: { value: 0.0 },
         uTextureSize: { value: new Vector2(width, height) },
-        uTexture: { value: null },
+        uTexture: { value: texture },
         uTouch: { value: null },
     };
+
+    console.log(uniforms)
 
 
     const vertex = `
     
-        in vec3 position;
-        in vec2 uv;
         in vec3 iPosition;
         in float iScale;
         out float vScale;
         out vec3 vPos;
         
-        uniform mat4 projectionMatrix;
-        uniform mat4 viewMatrix;
-
+    
         uniform vec2 uTextureSize;
+        uniform sampler2D uTexture;
+        uniform float uRandom;
 
-        out vec2 vPUv;
-        out vec2 vUv;
+        varying vec2 vUv;
+        varying vec2 vPUv;
 
         void main(){
             vUv = uv;
-            //vec2 puv = offset.xy / uTextureSize;
-            //vPUv = puv;
+            vec2 puv = iPosition.xy / uTextureSize;
+            vPUv = puv;
+
+            // pixel color
+            vec4 colA = texture2D(uTexture, puv);
+            float grey = colA.r * 0.21 + colA.g * 0.71 + colA.b * 0.07;
 
             vec3 p = position;
-            p.x *= iScale;
-            p.y *= iScale;
-            p.z *= iScale;
+            p.x *= grey;
+            p.y *= grey;
+            p.z *= grey;
             
             vec4 pos = vec4(p + iPosition,1.);
             vPos = iPosition;
@@ -165,14 +184,23 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
     const fragment = `
         precision highp float;
 
-        in vec2 vPUv;
-        in vec2 vUv;
+        uniform sampler2D uTexture;
+
+        varying vec2 vUv;
+        varying vec2 vPUv;
         
         in float vScale;
         in vec3 vPos;
-        out vec4 glFragColor;
+        
         void main(){
-            glFragColor = vec4(1.0,vScale,0.0,1.);
+            vec4 color = vec4(0.0);
+            vec2 uv = vUv;
+            vec2 puv = vPUv;
+
+            // pixel color
+            //vec3 colA = vec3(vScale, 0.0, 0.0);
+            vec3 colA = texture2D(uTexture,puv).rgb;
+            gl_FragColor = vec4(colA, 1.0);
         }    
     `
 
@@ -182,10 +210,9 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
                 instanceCount={numInstances}
                 index={objectData.index}
                 attributes={objectData.attribs}
-                uniforms={uniforms}
             />
-            <rawShaderMaterial
-                glslVersion={GLSL3}
+            <shaderMaterial
+                uniforms={uniforms}
                 vertexShader={vertex}
                 fragmentShader={fragment}/>
         </mesh>
