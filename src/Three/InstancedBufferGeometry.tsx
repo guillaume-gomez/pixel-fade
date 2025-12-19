@@ -25,84 +25,18 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
     const [texture] = useLoader(TextureLoader, [base64Texture]);
     const numInstances = width * height;
 
-    // const objectData = useMemo(() => {
-    //     const data = init(numInstances);
-    //     return data;
-    // }, [width, height]);
-
-    // function init(numPoints: number) {
-    //     const geometry = new InstancedBufferGeometry();
-        
-    //     // positions
-    //     const positions = new BufferAttribute(new Float32Array(4 * 3), 3);
-    //     positions.setXYZ(0, -0.5, 0.5, 0.0);
-    //     positions.setXYZ(1, 0.5, 0.5, 0.0);
-    //     positions.setXYZ(2, -0.5, -0.5, 0.0);
-    //     positions.setXYZ(3, 0.5, -0.5, 0.0);
-        
-    //     // uvs
-    //     const uvs = new BufferAttribute(new Float32Array(4 * 2), 2);
-    //     uvs.setXYZ(0, 0.0, 0.0);
-    //     uvs.setXYZ(1, 1.0, 0.0);
-    //     uvs.setXYZ(2, 0.0, 1.0);
-    //     uvs.setXYZ(3, 1.0, 1.0);
-
-    //     // index
-    //     const indexes = new BufferAttribute(new Uint16Array([ 0, 2, 1, 2, 3, 1 ]), 1);
-
-    //     const indices = new Uint16Array(numPoints);
-    //     const offsets = new Float32Array(numPoints * 3);
-    //     const angles = new Float32Array(numPoints);
-
-    //     for (let i = 0; i < numPoints; i++) {
-    //         offsets[i * 3 + 0] = i % width;
-    //         offsets[i * 3 + 1] = Math.floor(i / width);
-
-    //         indices[i] = i;
-
-    //         angles[i] = Math.random() * Math.PI;
-    //     }
-    //     //geometry.addAttribute('position', positions);
-    //     //geometry.addAttribute('uv', uvs);
-    //     //geometry.addAttribute('pindex', new InstancedBufferAttribute(indices, 1, false));
-    //     //geometry.addAttribute('offset', new InstancedBufferAttribute(offsets, 3, false));
-    //     //geometry.addAttribute('angle', new InstancedBufferAttribute(angles, 1, false));
-
-    //     const ipositions = new InstancedBufferAttribute(positions, 3);
-    //     const iscales = new InstancedBufferAttribute(new Int8Array([0.5]), 1);
-    //     const pIndex
-
-
-
-    //     return {
-    //         index: indexes,
-    //         attribs: {
-    //             iPosition: positions,
-    //             iScale: iscales,
-    //             uvs,
-    //             //...sphere.attributes
-    //         }
-    //     }
-    // }
-
-     const {
-        dimensions = 3,
-        packAttempts = 500,
-        minRadius = 0.05,
-        maxRadius = 0.5,
-        padding = 0.0025,
-        widthSegments = 1,
-        heightSegments = 1
-    } = props;
-
     // Builds instanced data for the packing
     const objectData = useMemo(() => {
+        const widthSegments = 1;
+        const heightSegments = 1;
+
         let plane = new PlaneGeometry(1, 1, widthSegments, heightSegments);
-        console.log(plane.attributes)
+        
         // setup arrays
         let positions = new Float32Array(numInstances * 3);
         let scales = new Float32Array(numInstances);
         let angles = new Float32Array(numInstances);
+        let indicesArray = new Uint16Array(numInstances);
 
         // Build per-instance attributes. 
         let count = 0
@@ -113,6 +47,7 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
 
             scales[i] = Math.random();
             angles[i] = Math.random() * Math.PI;
+            indicesArray[i] = i;
 
             count += 3 
         }
@@ -120,6 +55,7 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
         const ipositions = new InstancedBufferAttribute(positions, 3);
         const iscales = new InstancedBufferAttribute(scales, 1);
         const iAngles = new InstancedBufferAttribute(angles, 1);
+        const indices = new InstancedBufferAttribute(indicesArray, 1);
         
         return {
             index: plane.index,
@@ -141,9 +77,6 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
         uTexture: { value: texture },
         uTouch: { value: null },
     };
-
-    console.log(uniforms)
-
 
     const vertex = `
     
