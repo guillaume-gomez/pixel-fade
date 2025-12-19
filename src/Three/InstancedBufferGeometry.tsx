@@ -2,12 +2,11 @@ import React, {useMemo} from "react";
 import { useLoader } from '@react-three/fiber';
 import {
     SphereGeometry,
-    GLSL3,
+    PlaneGeometry,
     BufferAttribute,
     InstancedBufferAttribute,
     InstancedBufferGeometry,
     Vector2,
-    PlaneGeometry,
     TextureLoader
 } from "three";
 
@@ -15,13 +14,23 @@ function randomInteger(min: number, max: number) {
    return Math.random() * (max - min) + min;
 }
 
+export interface Config {
+    round: float;
+}
+
 interface instancedBufferGeometryProps {
     width: number;
     height: number;
-    base64Texture: string
+    base64Texture: string;
+    config: Config;
 }
 
-export default function instancedBufferGeometry({width, height, base64Texture, ...props} : instancedBufferGeometryProps) {
+export default function instancedBufferGeometry({
+    width,
+    height,
+    base64Texture,
+    config,
+} : instancedBufferGeometryProps) {
     const [texture] = useLoader(TextureLoader, [base64Texture]);
     const numInstances = width * height;
 
@@ -40,9 +49,9 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
         // Build per-instance attributes. 
         let count = 0
         for(let i= 0; i < numInstances; i++) {
-            positionsArray[count] = i % width;
-            positionsArray[count + 1] = Math.floor(i / width);;
-            positionsArray[count + 2] = 0//randomInteger(-2, 2);
+            positionsArray[count] = (i % width);
+            positionsArray[count + 1] = (Math.floor(i / width));
+            positionsArray[count + 2] = 0;//randomInteger(-2, 2);
 
             anglesArray[i] = Math.random() * Math.PI;
             indicesArray[i] = i;
@@ -58,24 +67,32 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
             index: plane.index,
             attribs: {
                 iPosition: positions,
-                iAngles: angles,
+                iAngle: angles,
                 ...plane.attributes
             }
         }
-    }, [])
+    }, [texture, config])
 
     const uniforms = {
         uTime: { value: 0 },
         uRandom: { value: 1.0 },
         uDepth: { value: 2.0 },
         uSize: { value: 0.0 },
+        uRound: { value: 0.8 },
         uTextureSize: { value: new Vector2(width, height) },
         uTexture: { value: texture },
     };
 
     const vertex = `
     
+        #pragma glslify: snoise2 = require(glsl-noise/simplex/2d)
+
+        float random(float n) {
+            return fract(sin(n) * 43758.5453123);
+        }
+
         in vec3 iPosition;
+        in float iAngle;
         out vec3 vPos;
         
         uniform vec2 uTextureSize;
@@ -90,7 +107,7 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
             vec2 puv = iPosition.xy / uTextureSize;
             vPUv = puv;
 
-            // pixel color
+            // scale pixel color
             vec4 colA = texture2D(uTexture, puv);
             float grey = colA.r * 0.21 + colA.g * 0.71 + colA.b * 0.07;
 
@@ -98,9 +115,17 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
             p.x *= grey;
             p.y *= grey;
             p.z *= grey;
+
+
+            vec3 finalPosition = vec3(p + iPosition);
+            // center the material based on the texture
+            finalPosition.x -= uTextureSize.x/2.;
+            finalPosition.y -= uTextureSize.y/2.;
+
             
-            vec4 pos = vec4(p + iPosition,1.);
+            vec4 pos = vec4(finalPosition, 1.0);
             vPos = iPosition;
+
             gl_Position = projectionMatrix * viewMatrix * pos;
         }
     `
@@ -109,6 +134,7 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
         precision highp float;
 
         uniform sampler2D uTexture;
+        uniform float uRound;
 
         varying vec2 vUv;
         varying vec2 vPUv;
@@ -123,7 +149,15 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
             // pixel color
             //vec3 colA = vec3(0.5, 0.0, 0.0);
             vec3 colA = texture2D(uTexture,puv).rgb;
-            gl_FragColor = vec4(colA, 1.0);
+
+
+            // circle
+            float border = 0.1;
+            float radius = uRound;
+            float dist = radius - distance(uv, vec2(0.5));
+            float t = smoothstep(0.0, border, dist);
+
+            gl_FragColor = vec4(colA, t);
         }    
     `
 
@@ -135,6 +169,10 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
                 attributes={objectData.attribs}
             />
             <shaderMaterial
+                uRound={config.round}
+                uTextureSize={ new Vector2(width, height) }
+                uTexture={texture}
+
                 uniforms={uniforms}
                 vertexShader={vertex}
                 fragmentShader={fragment}/>
