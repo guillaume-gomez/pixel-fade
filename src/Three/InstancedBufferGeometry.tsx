@@ -1,5 +1,5 @@
-import React, {useMemo} from "react";
-import { useLoader } from '@react-three/fiber';
+import React, { useMemo, useRef } from "react";
+import { useLoader, useFrame, extend } from '@react-three/fiber';
 import {
     SphereGeometry,
     PlaneGeometry,
@@ -9,6 +9,9 @@ import {
     Vector2,
     TextureLoader
 } from "three";
+import PixelsFadeMaterial from "./PixelsFadeMaterial";
+
+extend({ PixelsFadeMaterial })
 
 function randomInteger(min: number, max: number) {
    return Math.random() * (max - min) + min;
@@ -31,6 +34,7 @@ export default function instancedBufferGeometry({
     base64Texture,
     config,
 } : instancedBufferGeometryProps) {
+    const mesh = useRef();
     const [texture] = useLoader(TextureLoader, [base64Texture]);
     const numInstances = width * height;
 
@@ -71,111 +75,26 @@ export default function instancedBufferGeometry({
                 ...plane.attributes
             }
         }
-    }, [texture, config])
+    }, [texture]);
 
-    const uniforms = {
-        uTime: { value: 0 },
-        uRandom: { value: 1.0 },
-        uDepth: { value: 2.0 },
-        uSize: { value: 0.0 },
-        uRound: { value: 0.8 },
-        uTextureSize: { value: new Vector2(width, height) },
-        uTexture: { value: texture },
-    };
+    useFrame((state) => {
+        const { clock } = state;
+        mesh.current.material.uniforms.uTime.value = clock.getElapsedTime();
+    });
 
-    const vertex = `
-    
-        #pragma glslify: snoise2 = require(glsl-noise/simplex/2d)
-
-        float random(float n) {
-            return fract(sin(n) * 43758.5453123);
-        }
-
-        in vec3 iPosition;
-        in float iAngle;
-        out vec3 vPos;
-        
-        uniform vec2 uTextureSize;
-        uniform sampler2D uTexture;
-        uniform float uRandom;
-
-        varying vec2 vUv;
-        varying vec2 vPUv;
-
-        void main(){
-            vUv = uv;
-            vec2 puv = iPosition.xy / uTextureSize;
-            vPUv = puv;
-
-            // scale pixel color
-            vec4 colA = texture2D(uTexture, puv);
-            float grey = colA.r * 0.21 + colA.g * 0.71 + colA.b * 0.07;
-
-            vec3 p = position;
-            p.x *= grey;
-            p.y *= grey;
-            p.z *= grey;
-
-
-            vec3 finalPosition = vec3(p + iPosition);
-            // center the material based on the texture
-            finalPosition.x -= uTextureSize.x/2.;
-            finalPosition.y -= uTextureSize.y/2.;
-
-            
-            vec4 pos = vec4(finalPosition, 1.0);
-            vPos = iPosition;
-
-            gl_Position = projectionMatrix * viewMatrix * pos;
-        }
-    `
-
-    const fragment = `
-        precision highp float;
-
-        uniform sampler2D uTexture;
-        uniform float uRound;
-
-        varying vec2 vUv;
-        varying vec2 vPUv;
-        
-        in vec3 vPos;
-        
-        void main(){
-            vec4 color = vec4(0.0);
-            vec2 uv = vUv;
-            vec2 puv = vPUv;
-
-            // pixel color
-            //vec3 colA = vec3(0.5, 0.0, 0.0);
-            vec3 colA = texture2D(uTexture,puv).rgb;
-
-
-            // circle
-            float border = 0.1;
-            float radius = uRound;
-            float dist = radius - distance(uv, vec2(0.5));
-            float t = smoothstep(0.0, border, dist);
-
-            gl_FragColor = vec4(colA, t);
-        }    
-    `
 
     return (
-        <mesh>
+        <mesh ref={mesh}>
             <instancedBufferGeometry
                 instanceCount={numInstances}
                 index={objectData.index}
                 attributes={objectData.attribs}
             />
-            <shaderMaterial
-                uRound={config.round}
-                uTextureSize={ new Vector2(width, height) }
+            <pixelsFadeMaterial
                 uTexture={texture}
-
-                uniforms={uniforms}
-                vertexShader={vertex}
-                fragmentShader={fragment}/>
+                uTextureSize={new Vector2(width, height)}
+                uRound={config.round}
+            />
         </mesh>
     )
 }
