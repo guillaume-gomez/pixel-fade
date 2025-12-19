@@ -29,40 +29,36 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
     const objectData = useMemo(() => {
         const widthSegments = 1;
         const heightSegments = 1;
-
+        // setup buffer geometry
         let plane = new PlaneGeometry(1, 1, widthSegments, heightSegments);
         
         // setup arrays
-        let positions = new Float32Array(numInstances * 3);
-        let scales = new Float32Array(numInstances);
-        let angles = new Float32Array(numInstances);
+        let positionsArray = new Float32Array(numInstances * 3);
+        let anglesArray = new Float32Array(numInstances);
         let indicesArray = new Uint16Array(numInstances);
 
         // Build per-instance attributes. 
         let count = 0
         for(let i= 0; i < numInstances; i++) {
-            positions[count] = i % width;
-            positions[count + 1] = Math.floor(i / width);;
-            positions[count + 2] = 0//randomInteger(-2, 2);
+            positionsArray[count] = i % width;
+            positionsArray[count + 1] = Math.floor(i / width);;
+            positionsArray[count + 2] = 0//randomInteger(-2, 2);
 
-            scales[i] = Math.random();
-            angles[i] = Math.random() * Math.PI;
+            anglesArray[i] = Math.random() * Math.PI;
             indicesArray[i] = i;
 
             count += 3 
         }
 
-        const ipositions = new InstancedBufferAttribute(positions, 3);
-        const iscales = new InstancedBufferAttribute(scales, 1);
-        const iAngles = new InstancedBufferAttribute(angles, 1);
+        const positions = new InstancedBufferAttribute(positionsArray, 3);
+        const angles = new InstancedBufferAttribute(anglesArray, 1);
         const indices = new InstancedBufferAttribute(indicesArray, 1);
         
         return {
             index: plane.index,
             attribs: {
-                iPosition: ipositions,
-                iScale: iscales,
-                iAngles: iAngles,
+                iPosition: positions,
+                iAngles: angles,
                 ...plane.attributes
             }
         }
@@ -75,17 +71,13 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
         uSize: { value: 0.0 },
         uTextureSize: { value: new Vector2(width, height) },
         uTexture: { value: texture },
-        uTouch: { value: null },
     };
 
     const vertex = `
     
         in vec3 iPosition;
-        in float iScale;
-        out float vScale;
         out vec3 vPos;
         
-    
         uniform vec2 uTextureSize;
         uniform sampler2D uTexture;
         uniform float uRandom;
@@ -109,7 +101,6 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
             
             vec4 pos = vec4(p + iPosition,1.);
             vPos = iPosition;
-            vScale = iScale;
             gl_Position = projectionMatrix * viewMatrix * pos;
         }
     `
@@ -122,7 +113,6 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
         varying vec2 vUv;
         varying vec2 vPUv;
         
-        in float vScale;
         in vec3 vPos;
         
         void main(){
@@ -131,7 +121,7 @@ export default function instancedBufferGeometry({width, height, base64Texture, .
             vec2 puv = vPUv;
 
             // pixel color
-            //vec3 colA = vec3(vScale, 0.0, 0.0);
+            //vec3 colA = vec3(0.5, 0.0, 0.0);
             vec3 colA = texture2D(uTexture,puv).rgb;
             gl_FragColor = vec4(colA, 1.0);
         }    
