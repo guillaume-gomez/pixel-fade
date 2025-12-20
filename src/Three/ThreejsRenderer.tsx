@@ -48,8 +48,8 @@ function ThreejsRenderer({
         >
           { import.meta.env.MODE === "development" ? <Stats/> : <></> }
           <ambientLight intensity={1.5} />
-          {/*<color attach="background" args={['#f0f0f0']} />
-          <fog attach="fog" args={['red', 20, -5]} />*/}
+          <color attach="background" args={[backgroundColor]} />
+          <fog attach="fog" args={['red', 20, -5]} />
           <pointLight position={[10, 10, 10]} intensity={1} castShadow />
             <Stage adjustCamera={true} intensity={1} shadows="contact" environment={null/*'city'*/}>
                      
