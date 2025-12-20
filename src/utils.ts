@@ -70,13 +70,3 @@ function componentToHex(c: number) : string {
 export function rgbToHex(r: number, g: number, b: number) : string {
   return "#" + componentToHex(Math.floor(r)) + componentToHex(Math.floor(g)) + componentToHex(Math.floor(b));
 }
-
-export async function toDataURL(blob: Blob) : Promise<string> {
-  return new Promise(ok => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => {
-      ok(reader.result as string)
-    });
-    reader.readAsDataURL(blob);
-  });
-}
