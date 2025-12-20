@@ -38,6 +38,8 @@ export default function instancedBufferGeometry({
     const [texture] = useLoader(TextureLoader, [base64Texture]);
     const numInstances = width * height;
 
+    console.log(numInstances);
+
     // Builds instanced data for the packing
     const objectData = useMemo(() => {
         const widthSegments = 1;
@@ -75,12 +77,14 @@ export default function instancedBufferGeometry({
                 ...plane.attributes
             }
         }
-    }, [texture]);
+    }, [base64Texture, width, height]);
 
     useFrame((state) => {
         const { clock } = state;
         mesh.current.material.uniforms.uTime.value = clock.getElapsedTime();
     });
+
+    console.log(width, height)
 
 
     return (
