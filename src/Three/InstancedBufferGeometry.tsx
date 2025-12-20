@@ -19,6 +19,7 @@ function randomInteger(min: number, max: number) {
 
 export interface Config {
     round: float;
+    optimised: boolean;
 }
 
 interface instancedBufferGeometryProps {
@@ -36,9 +37,9 @@ export default function instancedBufferGeometry({
 } : instancedBufferGeometryProps) {
     const mesh = useRef();
     const [texture] = useLoader(TextureLoader, [base64Texture]);
-    const numInstances = width * height;
+    const maxNumberOfInstances = width * height;
 
-    console.log(numInstances);
+    console.log(maxNumberOfInstances);
 
     // Builds instanced data for the packing
     const objectData = useMemo(() => {
@@ -48,16 +49,16 @@ export default function instancedBufferGeometry({
         let plane = new PlaneGeometry(1, 1, widthSegments, heightSegments);
         
         // setup arrays
-        let positionsArray = new Float32Array(numInstances * 3);
-        let anglesArray = new Float32Array(numInstances);
-        let indicesArray = new Uint16Array(numInstances);
+        let positionsArray = new Float32Array(maxNumberOfInstances * 3);
+        let anglesArray = new Float32Array(maxNumberOfInstances);
+        let indicesArray = new Uint16Array(maxNumberOfInstances);
 
         // Build per-instance attributes. 
         let count = 0
-        for(let i= 0; i < numInstances; i++) {
+        for(let i= 0; i < maxNumberOfInstances; i++) {
             positionsArray[count] = (i % width);
             positionsArray[count + 1] = (Math.floor(i / width));
-            positionsArray[count + 2] = 0;//randomInteger(-2, 2);
+            positionsArray[count + 2] = 0;
 
             anglesArray[i] = Math.random() * Math.PI;
             indicesArray[i] = i;
@@ -90,7 +91,7 @@ export default function instancedBufferGeometry({
     return (
         <mesh ref={mesh}>
             <instancedBufferGeometry
-                instanceCount={numInstances}
+                instanceCount={maxNumberOfInstances}
                 index={objectData.index}
                 attributes={objectData.attribs}
             />

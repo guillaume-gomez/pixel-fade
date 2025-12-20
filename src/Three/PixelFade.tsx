@@ -26,8 +26,7 @@ function PixelFade({ base64Texture = imageBase64, width = 500, height = 500 }) {
       // `${BASE_URL}/plastic_0021/reduced/ao_1k.jpg`,
     ]);
 
-    console.log(texture)
-
+    
     // useEffect(() => {
     //   normalMap.repeat.set( widthMozaic/tileSize, heightMozaic/tileSize );
     //   normalMap.offset.set( offset, offset );
