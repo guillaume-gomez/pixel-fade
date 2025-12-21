@@ -9,8 +9,12 @@ const PixelsFadeMaterial = shaderMaterial(
     uTime: 0.0,
     uRandom: 1.0,
     uDepth: 2.0,
-    uSize: 0.0,
-    uRound: 0.0,
+    uSize: 1.0,
+    uRound: 1.0,
+    uFbmAmplitude: 10.0,
+    uFbmFrequency: 1.0,
+    uFbmSpeed: 10.0,
+
   },
   // vertex shader
   /*glsl*/`
@@ -38,28 +42,36 @@ const PixelsFadeMaterial = shaderMaterial(
              (d - b) * u.x * u.y;
     }
 
+    uniform float uFbmAmplitude;
+    uniform float uFbmFrequency;
+
+    #define OCTAVES 6
+
     // Fractal Brownian Motion - layered noise for natural variation
     float fbm(vec2 st, int octaves) {
       float value = 0.0;
-      float amplitude = 0.5;
-      vec2 shift = vec2(100.0);
+      float amplitude = uFbmAmplitude;
+      float frequency = uFbmFrequency;
+      vec2 shift = vec2(100.0, 100.0);
 
       // Rotation matrix to reduce axial bias
       mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
 
-      for (int i = 0; i < 6; i++) {
+      for (int i = 0; i < OCTAVES; i++) {
         if (i >= octaves) break;
-        value += amplitude * noise(st);
+        value += amplitude * noise(st * frequency);
         st = rot * st * 2.0 + shift;
         amplitude *= 0.5;
+        frequency *= 2.0; 
       }
 
       return value;
     }
 
+    uniform float uFbmSpeed;
     // Curl Noise
     vec2 curlNoise(vec2 st, float time) {
-      float eps = 0.01;
+      float eps = uFbmSpeed;
 
       // Sample FBM at offset positions
       float n1 = fbm(st + vec2(eps, 0.0) + time * 0.1, 4);
@@ -84,6 +96,7 @@ const PixelsFadeMaterial = shaderMaterial(
     uniform sampler2D uTexture;
     uniform float uRandom;
     uniform float uTime;
+    uniform float uSize;
 
     varying vec2 vUv;
     varying vec2 vPUv;
@@ -98,18 +111,18 @@ const PixelsFadeMaterial = shaderMaterial(
         float grey = colA.r * 0.21 + colA.g * 0.71 + colA.b * 0.07;
 
         vec3 p = position;
-        p.x *= grey;
-        p.y *= grey;
-        p.z *= grey;
+        p.x *= (grey * uSize);
+        p.y *= (grey * uSize);
+        p.z *= (grey * uSize);
 
         // curl noise to move tile
-        vec2 noise = curlNoise(uv, uTime);
+        vec2 noise = curlNoise(puv, uTime);
 
         vec3 finalPosition = vec3(p + iPosition);
         // center the material based on the texture
-        finalPosition.x += -uTextureSize.x/2.;
-        finalPosition.y += -uTextureSize.y/2.;
-        finalPosition.z = cos(uTime * iAngle);
+        finalPosition.x += -uTextureSize.x/2. + iAngle * noise.x;
+        finalPosition.y += -uTextureSize.y/2. + iAngle * noise.y;
+        finalPosition.z += sin(uTime * iAngle);
 
         
         vec4 pos = vec4(finalPosition, 1.0);
@@ -123,8 +136,7 @@ const PixelsFadeMaterial = shaderMaterial(
     precision highp float;
 
         uniform sampler2D uTexture;
-        uniform float uRound;
-
+        
         varying vec2 vUv;
         varying vec2 vPUv;
         
@@ -139,12 +151,7 @@ const PixelsFadeMaterial = shaderMaterial(
             //vec3 colA = vec3(0.5, 0.0, 0.0);
             vec3 colA = texture2D(uTexture,puv).rgb;
 
-
-            // circle
-            float border = 0.1;
-            float radius = uRound;
-            float dist = radius - distance(uv, vec2(0.5));
-            float t = smoothstep(0.0, border, dist);
+            float t = 1.0;
 
             gl_FragColor = vec4(colA, t);
         }    
