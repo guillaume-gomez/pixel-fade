@@ -1,25 +1,36 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, forwardRef, useEffect } from "react";
 import { useLoader, useFrame, extend } from '@react-three/fiber';
 import {
     SphereGeometry,
     PlaneGeometry,
+    CircleGeometry,
     BufferAttribute,
     InstancedBufferAttribute,
     InstancedBufferGeometry,
+    BufferGeometry,
     Vector2,
+    Vector3,
+    Box3,
+    BoxHelper,
     TextureLoader
 } from "three";
+import { useHelper } from '@react-three/drei';
 import PixelsFadeMaterial from "./PixelsFadeMaterial";
+import RoundedPlane from "./RoundedPlane";
+
 
 extend({ PixelsFadeMaterial })
 
-function randomInteger(min: number, max: number) {
-   return Math.random() * (max - min) + min;
-}
+
+type GeometryType = "rounded"|"rectangle"|"circle";
 
 export interface Config {
-    round: float;
+    fbmAmplitude: float;
+    fbmFrequency: float;
+    fbmSpeed: float;
+    size: float;
     optimised: boolean;
+    geometryType: GeometryType;
 }
 
 interface instancedBufferGeometryProps {
@@ -27,26 +38,25 @@ interface instancedBufferGeometryProps {
     height: number;
     base64Texture: string;
     config: Config;
+    ref: any;
 }
 
-export default function instancedBufferGeometry({
+export default forwardRef(function instancedBufferGeometry({
     width,
     height,
     base64Texture,
     config,
-} : instancedBufferGeometryProps) {
-    const mesh = useRef();
+} : instancedBufferGeometryProps, ref) {
+    //useHelper(ref, BoxHelper, 'red');
     const [texture] = useLoader(TextureLoader, [base64Texture]);
+    
     const maxNumberOfInstances = width * height;
-
-    console.log(maxNumberOfInstances);
-
+    
     // Builds instanced data for the packing
     const objectData = useMemo(() => {
-        const widthSegments = 1;
-        const heightSegments = 1;
+        
         // setup buffer geometry
-        let plane = new PlaneGeometry(1, 1, widthSegments, heightSegments);
+        let geometry = pickGeometry(config.geometryType)
         
         // setup arrays
         let positionsArray = new Float32Array(maxNumberOfInstances * 3);
@@ -55,7 +65,7 @@ export default function instancedBufferGeometry({
 
         // Build per-instance attributes. 
         let count = 0
-        for(let i= 0; i < maxNumberOfInstances; i++) {
+        for(let i = 0; i < maxNumberOfInstances; i++) {
             positionsArray[count] = (i % width);
             positionsArray[count + 1] = (Math.floor(i / width));
             positionsArray[count + 2] = 0;
@@ -71,25 +81,34 @@ export default function instancedBufferGeometry({
         const indices = new InstancedBufferAttribute(indicesArray, 1);
         
         return {
-            index: plane.index,
+            index: geometry.index,
             attribs: {
                 iPosition: positions,
                 iAngle: angles,
-                ...plane.attributes
+                ...geometry.attributes
             }
         }
-    }, [base64Texture, width, height]);
+    }, [base64Texture, width, height, config.geometryType]);
 
     useFrame((state) => {
         const { clock } = state;
-        mesh.current.material.uniforms.uTime.value = clock.getElapsedTime();
+        ref.current.material.uniforms.uTime.value = clock.getElapsedTime();
     });
 
-    console.log(width, height)
-
+    function pickGeometry(geometryType: GeometryType) {
+        switch(geometryType) {
+        case "rounded":
+            return new RoundedPlane( 1, 1, 0.2, 18 );
+        case "circle":
+            return new CircleGeometry( 1, 18 );
+        case "rectangle":
+        default:
+            return new PlaneGeometry(1, 1, 1, 1);
+        }
+    }
 
     return (
-        <mesh ref={mesh}>
+        <mesh ref={ref}>
             <instancedBufferGeometry
                 instanceCount={maxNumberOfInstances}
                 index={objectData.index}
@@ -99,7 +118,11 @@ export default function instancedBufferGeometry({
                 uTexture={texture}
                 uTextureSize={new Vector2(width, height)}
                 uRound={config.round}
+                uSize={config.size}
+                uFbmAmplitude={config.fbmAmplitude}
+                uFbmFrequency={config.fbmFrequency}
+                uFbmSpeed={config.fbmSpeed}
             />
         </mesh>
     )
-}
+});
