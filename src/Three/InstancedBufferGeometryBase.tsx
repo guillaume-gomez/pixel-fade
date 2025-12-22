@@ -1,8 +1,7 @@
-import React, {useMemo} from "react";
-import pack from "pack-spheres"
+import {useMemo} from "react";
 import {SphereGeometry, GLSL3, InstancedBufferAttribute} from "three"
 
-export default function instancedBufferGeometry(props) {
+export default function instancedBufferGeometry(props: any) {
 
     const {
         numInstances = 1000,

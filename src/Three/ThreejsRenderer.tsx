@@ -1,14 +1,12 @@
-import { useRef, Suspense, useEffect, useState, forwardRef } from 'react';
-import { Group, MathUtils } from "three";
-import { Canvas, useFrame } from '@react-three/fiber';
-import PixelFade from "./PixelFade";
-import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, Gltf, Text, CameraControls } from '@react-three/drei';
+import { useRef, Suspense, useEffect, useState } from 'react';
+import { Canvas } from '@react-three/fiber';
+//import PixelFade from "./PixelFade";
+import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls } from '@react-three/drei';
 import FallBackLoader from "./FallBackLoader";
-import { Instances, Instance, Environment } from '@react-three/drei';
 import { EffectComposer, Pixelation, Vignette, ChromaticAberration } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing'
 
-import InstanceMesh, { Config } from "./InstancedBufferGeometry";
+import InstanceMesh, { type Config } from "./InstancedBufferGeometry";
 
 
 const { BASE_URL, MODE } = import.meta.env;
@@ -125,6 +123,7 @@ function ThreejsRenderer({
           <CameraControls
             default
             ref={cameraControllerRef}
+            smoothTime={1.0}
             minPolarAngle={0}
             maxPolarAngle={Math.PI / 1.9}
             minAzimuthAngle={-0.55}
