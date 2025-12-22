@@ -3,7 +3,7 @@ import {
     BufferAttribute,
 } from "three";
 
-export default function RoundedPlane( w, h, r, s ) { // width, height, radius corner, smoothness
+export default function RoundedPlane(w: number, h: number, r: number, s: number ): BufferGeometry { // width, height, radius corner, smoothness
         
     // helper const's
     const wi = w / 2 - r;       // inner width
