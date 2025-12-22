@@ -112,7 +112,6 @@ export default forwardRef(function instancedBufferGeometry({
             <pixelsFadeMaterial
                 uTexture={texture}
                 uTextureSize={new Vector2(width, height)}
-                uRound={config.round}
                 uSize={config.size}
                 uFbmAmplitude={config.fbmAmplitude}
                 uFbmFrequency={config.fbmFrequency}

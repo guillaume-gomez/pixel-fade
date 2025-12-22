@@ -10,7 +10,6 @@ const PixelsFadeMaterial = shaderMaterial(
     uRandom: 1.0,
     uDepth: 2.0,
     uSize: 1.0,
-    uRound: 1.0,
     uFbmAmplitude: 10.0,
     uFbmFrequency: 1.0,
     uFbmSpeed: 10.0,
