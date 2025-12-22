@@ -19,7 +19,6 @@ function Range({label, onChange, value, min, max, step = 1, float = false} : Ran
           step={step}
           min={min}
           max={max}
-          float={float ? "true": "false"}
           type="range"
           className="range range-primary w-full"
           onChange={(e) => {

@@ -1,20 +1,15 @@
-import React, { useMemo, useRef, forwardRef, useEffect } from "react";
+import { useMemo, forwardRef } from "react";
 import { useLoader, useFrame, extend } from '@react-three/fiber';
 import {
-    SphereGeometry,
     PlaneGeometry,
     CircleGeometry,
-    BufferAttribute,
     InstancedBufferAttribute,
-    InstancedBufferGeometry,
     BufferGeometry,
     Vector2,
-    Vector3,
-    Box3,
-    BoxHelper,
+    //BoxHelper,
     TextureLoader
 } from "three";
-import { useHelper } from '@react-three/drei';
+//import { useHelper } from '@react-three/drei';
 import PixelsFadeMaterial from "./PixelsFadeMaterial";
 import RoundedPlane from "./RoundedPlane";
 
@@ -25,10 +20,10 @@ extend({ PixelsFadeMaterial })
 type GeometryType = "rounded"|"rectangle"|"circle";
 
 export interface Config {
-    fbmAmplitude: float;
-    fbmFrequency: float;
-    fbmSpeed: float;
-    size: float;
+    fbmAmplitude: number;
+    fbmFrequency: number;
+    fbmSpeed: number;
+    size: number;
     optimised: boolean;
     geometryType: GeometryType;
 }
