@@ -2,9 +2,10 @@ import { useRef, Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 //import PixelFade from "./PixelFade";
 import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls } from '@react-three/drei';
+import { type Mesh} from "three";
 import FallBackLoader from "./FallBackLoader";
 import { EffectComposer, Pixelation, Vignette, ChromaticAberration } from '@react-three/postprocessing';
-import { BlendFunction } from 'postprocessing'
+import { BlendFunction } from 'postprocessing';
 
 import InstanceMesh, { type Config } from "./InstancedBufferGeometry";
 
@@ -77,9 +78,6 @@ function ThreejsRenderer({
           camera={{ position: [0,0, 10], fov: 75, far: 500 }}
           dpr={window.devicePixelRatio}
           shadows
-          onDoubleClick={() => {
-            toggleFullscreen();
-          }}
         >
           { import.meta.env.MODE === "development" ? <Stats/> : <></> }
           <ambientLight intensity={1.5} />
@@ -121,8 +119,8 @@ function ThreejsRenderer({
            {/*<Pixelation  granularity={10}/>*/}
           </EffectComposer>
           <CameraControls
-            default
             ref={cameraControllerRef}
+            makeDefault
             smoothTime={1.0}
             minPolarAngle={0}
             maxPolarAngle={Math.PI / 1.9}
