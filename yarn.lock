@@ -1486,11 +1486,6 @@ p-locate@^5.0.0:
   dependencies:
     p-limit "^3.0.2"
 
-pack-spheres@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/pack-spheres/-/pack-spheres-1.0.4.tgz#91c50dcf3da8bd8d9c0d5d301add34a1cf3fabf9"
-  integrity sha512-q4xdU6MVC2ZhqhAsFUpZDlYo82C2/fw1ea+8Wdyv4vyOn0HJvPboFHuOpJEuEVj28iliBo3PT0+/NYRw1Q8Scg==
-
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parent-module/-/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
