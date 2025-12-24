@@ -4,7 +4,6 @@ import {
     PlaneGeometry,
     CircleGeometry,
     InstancedBufferAttribute,
-    BufferGeometry,
     Vector2,
     //BoxHelper,
     TextureLoader
@@ -17,7 +16,7 @@ import RoundedPlane from "./RoundedPlane";
 extend({ PixelsFadeMaterial })
 
 
-type GeometryType = "rounded"|"rectangle"|"circle";
+export type GeometryType = "rounded"|"rectangle"|"circle";
 
 export interface Config {
     fbmAmplitude: number;
@@ -33,15 +32,16 @@ interface instancedBufferGeometryProps {
     height: number;
     base64Texture: string;
     config: Config;
-    ref: any;
+    ref: string;
 }
 
-export default forwardRef(function instancedBufferGeometry({
+const instancedBufferGeometry = forwardRef<any, instancedBufferGeometryProps>((
+{
     width,
     height,
     base64Texture,
     config,
-} : instancedBufferGeometryProps, ref) {
+}, ref) => {
     //useHelper(ref, BoxHelper, 'red');
     const [texture] = useLoader(TextureLoader, [base64Texture]);
     
@@ -56,7 +56,8 @@ export default forwardRef(function instancedBufferGeometry({
         // setup arrays
         let positionsArray = new Float32Array(maxNumberOfInstances * 3);
         let anglesArray = new Float32Array(maxNumberOfInstances);
-        let indicesArray = new Uint16Array(maxNumberOfInstances);
+        // used for optimisation
+        let indicesArray = new Uint16Array(maxNumberOfInstances); 
 
         // Build per-instance attributes. 
         let count = 0
@@ -73,7 +74,7 @@ export default forwardRef(function instancedBufferGeometry({
 
         const positions = new InstancedBufferAttribute(positionsArray, 3);
         const angles = new InstancedBufferAttribute(anglesArray, 1);
-        const indices = new InstancedBufferAttribute(indicesArray, 1);
+        //const indices = new InstancedBufferAttribute(indicesArray, 1);
         
         return {
             index: geometry.index,
@@ -120,3 +121,5 @@ export default forwardRef(function instancedBufferGeometry({
         </mesh>
     )
 });
+
+export default instancedBufferGeometry;

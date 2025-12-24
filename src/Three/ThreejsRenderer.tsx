@@ -10,7 +10,7 @@ import { BlendFunction } from 'postprocessing';
 import InstanceMesh, { type Config } from "./InstancedBufferGeometry";
 
 
-const { BASE_URL, MODE } = import.meta.env;
+const { /*BASE_URL,*/ MODE } = import.meta.env;
 
 
 interface ThreeJsRendererProps {
@@ -30,7 +30,7 @@ function ThreejsRenderer({
 } : ThreeJsRendererProps ): React.ReactElement {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const meshRef = useRef<Mesh|null>(null);
-  const cameraControllerRef = useRef<ExternalActionInterface| null>(null);
+  const cameraControllerRef = useRef<CameraControls>(null);
   const [vignetteDarkness, setVignetteDarkness] = useState<number>(1.5);
 
   useEffect(() => {
@@ -106,17 +106,17 @@ function ThreejsRenderer({
               <GizmoViewport labelColor="white" axisHeadScale={1} />
             </GizmoHelper>
           }
-          <EffectComposer disableNormalPass>
+          <EffectComposer enableNormalPass={false}>
             <Vignette
               offset={0.1} darkness={vignetteDarkness} 
               eskil={false} // Eskil's vignette technique
               blendFunction={BlendFunction.NORMAL} // blend mode
             />
-            {/*<ChromaticAberration
+            <ChromaticAberration
               blendFunction={BlendFunction.NORMAL} // blend mode
               offset={[0.02, 0.002]} // color offset
-            />*/}
-           {/*<Pixelation  granularity={10}/>*/}
+            />
+           <Pixelation  granularity={10}/>
           </EffectComposer>
           <CameraControls
             ref={cameraControllerRef}
