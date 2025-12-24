@@ -4,9 +4,9 @@ import viteLogo from '/vite.svg';
 import './App.css';
 import InputFileWithPreview from "./components/InputFileWithPreview";
 import Range from "./components/Range";
+import Select from "./components/Select";
 import { resizeImage } from "./utils";
 import ThreejsRenderer from "./Three/ThreejsRenderer";
-import Config from "../InstanceBufferGeometry";
 
 function App() {
   const [count, setCount] = useState(0)
@@ -14,7 +14,12 @@ function App() {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
   const [width, setWidth] =  useState<number>(200);
   const [height, setHeight] =  useState<number>(200);
-  const [round, setRound] = useState<number>(0.8);
+  
+  const [geometryType, setGeometryType] = useState<string>("rounded");
+  const [size, setSize] = useState<number>(1.0);
+  const [fbmFrequency, setFbmFrequency] = useState<number>(1.0);
+  const [fbmSpeed, setFbmSpeed] = useState<number>(10.0);
+  const [fbmAmplitude, setFbmAmplitude] = useState<number>(0.8);
   
   function uploadImage(newImage: HTMLImageElement) {
     const expectedWidth = 200;
@@ -40,28 +45,77 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
-      <InputFileWithPreview 
-        onChange={uploadImage}
-        value={image}
-      />
-      <Range 
-        value={round}
-        onChange={(value) => setRound(value)}
-        min={0.1}
-        max={1.0}
-        step={0.1}
-        float={true}
-      /> 
+      <div>
+        <InputFileWithPreview 
+          onChange={uploadImage}
+          value={image}
+        />
+        <Select
+          label="geometry type"
+          value={geometryType}
+          onChange={(newValue) => setGeometryType(newValue)}
+          options={
+            [
+              {value: "rounded", label: "Rounded"},
+              {value: "rectangle", label: "Rectangle"},
+              {value: "circle", label: "Circle"}
+            ]
+          }
+        />
+        <Range 
+          label="Size"
+          value={size}
+          onChange={(value) => setSize(value)}
+          min={0.1}
+          max={5.0}
+          step={0.1}
+          float={true}
+        /> 
+        <Range 
+          label="fbmFrequency"
+          value={fbmFrequency}
+          onChange={(value) => setFbmFrequency(value)}
+          min={0.1}
+          max={100.0}
+          step={0.1}
+          float={true}
+        /> 
+        <Range 
+          label="fbmSpeed"
+          value={fbmSpeed}
+          onChange={(value) => setFbmSpeed(value)}
+          min={0.1}
+          max={100.0}
+          step={0.1}
+          float={true}
+        /> 
+        <Range 
+          label="fbmAmplitude"
+          value={fbmAmplitude}
+          onChange={(value) => setFbmAmplitude(value)}
+          min={0.1}
+          max={10.0}
+          step={0.1}
+          float={true}
+        /> 
+      </div>
 
       <div style={{width: "800px", height: "100vh", background: "transparent"}}>
         {
           image?.src && (
             <ThreejsRenderer
-              backgroundColor="red"
+              backgroundColor="#333"
               width={width}
               height={height}
               base64Texture={image?.src}
-              config={{ round, optimised: true }}
+              config={{
+                geometryType,
+                size,
+                fbmFrequency,
+                fbmSpeed,
+                fbmAmplitude,
+                optimised: true
+              }}
             />
           )
         }
