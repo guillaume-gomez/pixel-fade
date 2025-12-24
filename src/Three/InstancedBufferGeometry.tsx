@@ -6,14 +6,15 @@ import {
     InstancedBufferAttribute,
     Vector2,
     //BoxHelper,
-    TextureLoader
+    TextureLoader,
+    BufferGeometry
 } from "three";
 //import { useHelper } from '@react-three/drei';
 import PixelsFadeMaterial from "./PixelsFadeMaterial";
 import RoundedPlane from "./RoundedPlane";
 
 
-extend({ PixelsFadeMaterial })
+extend({ PixelsFadeMaterial });
 
 
 export type GeometryType = "rounded"|"rectangle"|"circle";
@@ -32,7 +33,6 @@ interface instancedBufferGeometryProps {
     height: number;
     base64Texture: string;
     config: Config;
-    ref: string;
 }
 
 const instancedBufferGeometry = forwardRef<any, instancedBufferGeometryProps>((
@@ -88,13 +88,17 @@ const instancedBufferGeometry = forwardRef<any, instancedBufferGeometryProps>((
 
     useFrame((state) => {
         const { clock } = state;
+        if(!ref || !ref.current) {
+            return;
+        }
+
         ref.current.material.uniforms.uTime.value = clock.getElapsedTime();
     });
 
-    function pickGeometry(geometryType: GeometryType) {
+    function pickGeometry(geometryType: GeometryType): BufferGeometry {
         switch(geometryType) {
         case "rounded":
-            return new RoundedPlane( 1, 1, 0.2, 18 );
+            return RoundedPlane( 1, 1, 0.2, 18 );
         case "circle":
             return new CircleGeometry( 1, 18 );
         case "rectangle":
@@ -105,6 +109,7 @@ const instancedBufferGeometry = forwardRef<any, instancedBufferGeometryProps>((
 
     return (
         <mesh ref={ref}>
+            {/* @ts-ignore */}
             <instancedBufferGeometry
                 instanceCount={maxNumberOfInstances}
                 index={objectData.index}

@@ -12,7 +12,6 @@ import { type GeometryType } from "./Three/InstancedBufferGeometry";
 function App() {
   const [count, setCount] = useState(0)
   const [image, setImage] = useState<HTMLImageElement>();
-  const [originalImage, setOriginalImage] = useState<HTMLImageElement>();
   const [width, setWidth] =  useState<number>(200);
   const [height, setHeight] =  useState<number>(200);
   
@@ -31,8 +30,6 @@ function App() {
     
     setWidth(expectedWidth);
     setHeight(expectedHeight);
-
-    setOriginalImage(newImage);
   }
 
   return (

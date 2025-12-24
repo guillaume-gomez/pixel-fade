@@ -90,7 +90,7 @@ function ThreejsRenderer({
                   <InstanceMesh
                     width={width}
                     height={height} 
-                    base64Texture={base64Texture}
+                    base64Texture={base64Texture as string}
                     config={config}
                     ref={meshRef}
                   />
@@ -128,7 +128,7 @@ function ThreejsRenderer({
             maxAzimuthAngle={0.55}
             minDistance={10}
             maxDistance={200}
-            onUpdate={(e) => fromCameraZPositionToVignetteDarkness(e.target._camera.position.z) }
+            onUpdate={(e: any) => fromCameraZPositionToVignetteDarkness(e.target._camera.position.z) }
           />
         </Canvas>
       </div>

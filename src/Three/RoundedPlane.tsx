@@ -3,13 +3,11 @@ import {
     BufferAttribute,
 } from "three";
 
-export default function RoundedPlane(w: number, h: number, r: number, s: number ): BufferGeometry { // width, height, radius corner, smoothness
-        
+ // width, height, radius corner, smoothness
+export default function RoundedPlane(w: number, h: number, r: number, s: number ): BufferGeometry {
     // helper const's
     const wi = w / 2 - r;       // inner width
     const hi = h / 2 - r;       // inner height
-    const w2 = w / 2;           // half width
-    const h2 = h / 2;           // half height
     const ul = r / w;           // u left
     const ur = ( w - r ) / w;   // u right
     const vl = r / h;           // v low
@@ -74,7 +72,7 @@ export default function RoundedPlane(w: number, h: number, r: number, s: number 
         
     }
         
-    const geometry = new BufferGeometry( );
+    const geometry = new BufferGeometry();
     geometry.setIndex( new BufferAttribute( new Uint32Array( indices ), 1 ) );
     geometry.setAttribute( 'position', new BufferAttribute( new Float32Array( positions ), 3 ) );
     geometry.setAttribute( 'uv', new BufferAttribute( new Float32Array( uvs ), 2 ) );
