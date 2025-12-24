@@ -13,8 +13,6 @@ interface PixelFadeProps {
 
 const geometry = new BoxGeometry(1, 1, 0.2, 1, 1, 1);
 
-const offset = 0;
-
 const SCALE = 10;
 
 function PixelFade({ base64Texture = imageBase64, width = 500, height = 500 }: PixelFadeProps) {
