@@ -7,6 +7,7 @@ import Range from "./components/Range";
 import Select from "./components/Select";
 import { resizeImage } from "./utils";
 import ThreejsRenderer from "./Three/ThreejsRenderer";
+import { type GeometryType } from "./Three/InstancedBufferGeometry";
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,7 +16,7 @@ function App() {
   const [width, setWidth] =  useState<number>(200);
   const [height, setHeight] =  useState<number>(200);
   
-  const [geometryType, setGeometryType] = useState<string>("rounded");
+  const [geometryType, setGeometryType] = useState<GeometryType>("rounded");
   const [size, setSize] = useState<number>(1.0);
   const [fbmFrequency, setFbmFrequency] = useState<number>(1.0);
   const [fbmSpeed, setFbmSpeed] = useState<number>(10.0);
