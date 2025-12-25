@@ -109,7 +109,7 @@ const instancedBufferGeometry = forwardRef<any, instancedBufferGeometryProps>((
 
     return (
         <mesh ref={ref}>
-            {/* @ts-ignore */}
+            {/* @ts-ignore nextline */}
             <instancedBufferGeometry
                 instanceCount={maxNumberOfInstances}
                 index={objectData.index}
