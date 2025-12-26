@@ -1,10 +1,12 @@
-import { useRef, Suspense, useEffect, useState } from 'react';
+import { useRef, Suspense, useEffect, useState, useContext } from 'react';
+import { SettingsContext } from "../SettingsContext";
+
 import { Canvas } from '@react-three/fiber';
 //import PixelFade from "./PixelFade";
 import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls } from '@react-three/drei';
 import { type Mesh} from "three";
 import FallBackLoader from "./FallBackLoader";
-import { EffectComposer, Pixelation, Vignette, ChromaticAberration } from '@react-three/postprocessing';
+import { EffectComposer, Vignette, ChromaticAberration } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 
 import InstanceMesh, { type Config } from "./InstancedBufferGeometry";
@@ -14,27 +16,32 @@ const { /*BASE_URL,*/ MODE } = import.meta.env;
 
 
 interface ThreeJsRendererProps {
-  backgroundColor: string;
-  width: number;
-  height: number;
   base64Texture?: string;
   config: Config;
 }
 
 function ThreejsRenderer({
-  backgroundColor,
-  width,
-  height,
   base64Texture,
   config
 } : ThreeJsRendererProps ): React.ReactElement {
-  const canvasContainerRef = useRef<HTMLDivElement>(null);
+  const {
+    width,
+    height,
+    backgroundColor
+  } = useContext(SettingsContext);
+
   const meshRef = useRef<Mesh|null>(null);
   const cameraControllerRef = useRef<CameraControls>(null);
   const [vignetteDarkness, setVignetteDarkness] = useState<number>(1.5);
+  const [chromaticOffset, setChromaticOffset] = useState<number>(0.0025);
 
   useEffect(() => {
     if(!cameraControllerRef.current) {
+      // try in 4000 sec
+      setTimeout(() => {
+        recenter();
+      }, 4000);
+      
       return;
     }
 
@@ -42,8 +49,9 @@ function ThreejsRenderer({
     cameraControllerRef.current.setPosition(0,0, 10, true);
 
     setTimeout(() => {
+      // delay the times to see the particules
       recenter();
-    }, 2500);
+    }, 3000);
 
   },[base64Texture, width, height, cameraControllerRef]);
 
@@ -67,12 +75,13 @@ function ThreejsRenderer({
 
   function fromCameraZPositionToVignetteDarkness(cameraZ: number) {
     setVignetteDarkness(minMax([10, 200], [1.5, 0.5], cameraZ));
+    setChromaticOffset(minMax([10, 200], [0, 0.0025], cameraZ));
   }
 
   return (
     <div className="flex flex-col gap-5 w-full h-full" style={{ width: '100%', height: '100%'}}>
-      <div ref={canvasContainerRef}  style={{ width: '100%', height: '100%'}}
-        className="hover:cursor-grabbing w-full h-full /*bg-secondary*/ bg-gradient-to-b from-sky-100 to-sky-500  rounded-xl"
+      <div style={{ width: '100%', height: '100%'}}
+        className="hover:cursor-grabbing w-full h-full rounded-xl"
       >
         <Canvas
           camera={{ position: [0,0, 10], fov: 75, far: 500 }}
@@ -114,9 +123,9 @@ function ThreejsRenderer({
             />
             <ChromaticAberration
               blendFunction={BlendFunction.NORMAL} // blend mode
-              offset={[0.02, 0.002]} // color offset
+              offset={[chromaticOffset, chromaticOffset]} // color offset
             />
-           <Pixelation  granularity={10}/>
+            {/*<GridP scale={0.0} lineWidth={.0}/>*/}
           </EffectComposer>
           <CameraControls
             ref={cameraControllerRef}
