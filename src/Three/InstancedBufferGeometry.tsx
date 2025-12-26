@@ -1,4 +1,4 @@
-import { useMemo, forwardRef } from "react";
+import { useMemo } from "react";
 import { useLoader, useFrame, extend } from '@react-three/fiber';
 import {
     PlaneGeometry,
@@ -28,22 +28,26 @@ export interface Config {
     geometryType: GeometryType;
 }
 
-interface instancedBufferGeometryProps {
+interface instancedBufferGeometryProps  {
     width: number;
     height: number;
     base64Texture: string;
     config: Config;
+    ref: any;
 }
 
-const instancedBufferGeometry = forwardRef<any, instancedBufferGeometryProps>((
+function instancedBufferGeometry(
 {
     width,
     height,
     base64Texture,
     config,
-}, ref) => {
+    ref
+}: instancedBufferGeometryProps ) {
     //useHelper(ref, BoxHelper, 'red');
     const [texture] = useLoader(TextureLoader, [base64Texture]);
+
+    console.log(ref)
     
     const maxNumberOfInstances = width * height;
     
@@ -109,12 +113,13 @@ const instancedBufferGeometry = forwardRef<any, instancedBufferGeometryProps>((
 
     return (
         <mesh ref={ref}>
-            {/* @ts-ignore nextline */}
             <instancedBufferGeometry
                 instanceCount={maxNumberOfInstances}
                 index={objectData.index}
                 attributes={objectData.attribs}
             />
+            {
+            /*  @ts-ignore */
             <pixelsFadeMaterial
                 uTexture={texture}
                 uTextureSize={new Vector2(width, height)}
@@ -123,8 +128,9 @@ const instancedBufferGeometry = forwardRef<any, instancedBufferGeometryProps>((
                 uFbmFrequency={config.fbmFrequency}
                 uFbmSpeed={config.fbmSpeed}
             />
+            }
         </mesh>
     )
-});
+}
 
 export default instancedBufferGeometry;
