@@ -1,36 +1,28 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
-import InputFileWithPreview from "./components/InputFileWithPreview";
-import Range from "./components/Range";
-import Select from "./components/Select";
-import { resizeImage } from "./utils";
+import Form from "./components/Form";
+import { resizeImage, getAverageBackground } from "./utils";
 import ThreejsRenderer from "./Three/ThreejsRenderer";
 import { type GeometryType } from "./Three/InstancedBufferGeometry";
 
+import { SettingsContext } from "./SettingsContext";
+
 function App() {
   const [count, setCount] = useState(0)
-  const [image, setImage] = useState<HTMLImageElement>();
-  const [width, setWidth] =  useState<number>(200);
-  const [height, setHeight] =  useState<number>(200);
   
-  const [geometryType, setGeometryType] = useState<GeometryType>("rounded");
-  const [size, setSize] = useState<number>(1.0);
-  const [fbmFrequency, setFbmFrequency] = useState<number>(1.0);
-  const [fbmSpeed, setFbmSpeed] = useState<number>(10.0);
-  const [fbmAmplitude, setFbmAmplitude] = useState<number>(0.8);
-  
-  function uploadImage(newImage: HTMLImageElement) {
-    const expectedWidth = 200;
-    const expectedHeight = Math.floor(newImage.height/newImage.width * 200);
-    
-    const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight);
-    setImage(resizedImage);
-    
-    setWidth(expectedWidth);
-    setHeight(expectedHeight);
-  }
+  const {
+    image, setImage,
+    width, setWidth,
+    height, setHeight,
+    geometryType, setGeometryType,
+    size, setSize,
+    fbmFrequency, setFbmFrequency,
+    fbmSpeed, setFbmSpeed,
+    fbmAmplitude, setFbmAmplitude,
+    backgroundColor, setBackgroundColor
+  } = useContext(SettingsContext);
 
   return (
     <>
@@ -43,66 +35,13 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
-      <div>
-        <InputFileWithPreview 
-          onChange={uploadImage}
-          value={image}
-        />
-        <Select
-          label="geometry type"
-          value={geometryType}
-          onChange={(newValue) => setGeometryType(newValue)}
-          options={
-            [
-              {value: "rounded", label: "Rounded"},
-              {value: "rectangle", label: "Rectangle"},
-              {value: "circle", label: "Circle"}
-            ]
-          }
-        />
-        <Range 
-          label="Size"
-          value={size}
-          onChange={(value) => setSize(value)}
-          min={0.1}
-          max={5.0}
-          step={0.1}
-          float={true}
-        /> 
-        <Range 
-          label="fbmFrequency"
-          value={fbmFrequency}
-          onChange={(value) => setFbmFrequency(value)}
-          min={0.1}
-          max={100.0}
-          step={0.1}
-          float={true}
-        /> 
-        <Range 
-          label="fbmSpeed"
-          value={fbmSpeed}
-          onChange={(value) => setFbmSpeed(value)}
-          min={0.1}
-          max={100.0}
-          step={0.1}
-          float={true}
-        /> 
-        <Range 
-          label="fbmAmplitude"
-          value={fbmAmplitude}
-          onChange={(value) => setFbmAmplitude(value)}
-          min={0.1}
-          max={10.0}
-          step={0.1}
-          float={true}
-        /> 
-      </div>
+      <Form />
 
-      <div style={{width: "800px", height: "100vh", background: "transparent"}}>
+      <div>
         {
           image?.src && (
             <ThreejsRenderer
-              backgroundColor="#333"
+              backgroundColor={backgroundColor}
               width={width}
               height={height}
               base64Texture={image?.src}
