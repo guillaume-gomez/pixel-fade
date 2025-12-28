@@ -6,10 +6,11 @@ import { Canvas } from '@react-three/fiber';
 import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls } from '@react-three/drei';
 import { type Mesh} from "three";
 import FallBackLoader from "./FallBackLoader";
-import { EffectComposer, Vignette, ChromaticAberration } from '@react-three/postprocessing';
+import { EffectComposer, Vignette, ChromaticAberration, Bloom } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 
-import InstanceMesh, { type Config } from "./InstancedBufferGeometry";
+import InstanceMesh, { type Config } from "./ParticleWithBufferGeometry/InstancedBufferGeometry";
+import InstancedBufferGeometryPoints from "./ParticleWithPoints/InstancedBufferGeometryPoints";
 
 
 const { /*BASE_URL,*/ MODE } = import.meta.env;
@@ -61,6 +62,8 @@ function ThreejsRenderer({
       return;
     }
 
+    console.log(meshRef.current)
+
     await cameraControllerRef.current.fitToBox(meshRef.current, true,
       { paddingLeft: width, paddingRight: width, paddingBottom: height, paddingTop: height }
     );
@@ -103,10 +106,15 @@ function ThreejsRenderer({
                     config={config}
                     ref={meshRef}
                   />
-                  {/*<PixelFade />*/}
-                 
+                  {/*<InstancedBufferGeometryPoints
+                    width={width}
+                    height={height} 
+                    base64Texture={base64Texture as string}
+                    config={config}
+                    ref={meshRef} />*/}
+                
                   { MODE === "development" &&
-                    <Grid args={[60, 60]} position={[0,0,0]} cellColor='white' />
+                    <Grid args={[1000, 1000]} position={[0,0,0]} cellColor='green' />
                   }
               </Suspense>
             </Stage>
@@ -121,10 +129,11 @@ function ThreejsRenderer({
               eskil={false} // Eskil's vignette technique
               blendFunction={BlendFunction.NORMAL} // blend mode
             />
-            <ChromaticAberration
+            <Bloom mipmapBlur luminanceThreshold={1.0} />
+            {/*<ChromaticAberration
               blendFunction={BlendFunction.NORMAL} // blend mode
               offset={[chromaticOffset, chromaticOffset]} // color offset
-            />
+            />*/}
             {/*<GridP scale={0.0} lineWidth={.0}/>*/}
           </EffectComposer>
           <CameraControls
