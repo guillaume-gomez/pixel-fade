@@ -97,7 +97,13 @@ function ThreejsRenderer({
           <fog attach="fog" args={['red', 20, -5]} />
           <pointLight position={[10, 10, 10]} intensity={1} castShadow />
             <Stage adjustCamera={false} intensity={1} shadows="contact" environment={null/*'city'*/}>
-                     
+                {/*<directionalLight
+                  color={"#FF0000"}
+                  position={[0,0, -10]}
+                  castShadow
+                  intensity={Math.PI * 2}
+                />*/}
+ 
                 <Suspense fallback={<FallBackLoader/>} >
                   <InstanceMesh
                     width={width}
