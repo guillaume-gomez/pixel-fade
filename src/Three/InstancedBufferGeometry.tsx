@@ -26,6 +26,7 @@ export interface Config {
     size: number;
     optimised: boolean;
     geometryType: GeometryType;
+    luminence: number;
 }
 
 interface instancedBufferGeometryProps  {
@@ -46,9 +47,7 @@ function instancedBufferGeometry(
 }: instancedBufferGeometryProps ) {
     //useHelper(ref, BoxHelper, 'red');
     const [texture] = useLoader(TextureLoader, [base64Texture]);
-
-    console.log(ref)
-    
+ 
     const maxNumberOfInstances = width * height;
     
     // Builds instanced data for the packing
@@ -79,6 +78,8 @@ function instancedBufferGeometry(
         const positions = new InstancedBufferAttribute(positionsArray, 3);
         const angles = new InstancedBufferAttribute(anglesArray, 1);
         //const indices = new InstancedBufferAttribute(indicesArray, 1);
+
+        console.log(geometry.index)
         
         return {
             index: geometry.index,
@@ -123,6 +124,7 @@ function instancedBufferGeometry(
             <pixelsFadeMaterial
                 uTexture={texture}
                 uTextureSize={new Vector2(width, height)}
+                uLuminenceIntensity={config.luminance}
                 uSize={config.size}
                 uFbmAmplitude={config.fbmAmplitude}
                 uFbmFrequency={config.fbmFrequency}

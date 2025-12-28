@@ -17,6 +17,7 @@ function SettingsContextWrapper({children}: Props) {
   const [fbmSpeed, setFbmSpeed] = useState<number>(10.0);
   const [fbmAmplitude, setFbmAmplitude] = useState<number>(0.8);
   const [backgroundColor, setBackgroundColor] = useState<string>("#222");
+  const [luminance, setLuminance] = useState<number>(1.0);
 
   return (
     <SettingsContext value={{
@@ -28,7 +29,8 @@ function SettingsContextWrapper({children}: Props) {
       fbmFrequency, setFbmFrequency,
       fbmSpeed, setFbmSpeed,
       fbmAmplitude, setFbmAmplitude,
-      backgroundColor, setBackgroundColor
+      backgroundColor, setBackgroundColor,
+      luminance, setLuminance,
     }}>
       {children}
     </SettingsContext >
