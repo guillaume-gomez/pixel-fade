@@ -61,7 +61,7 @@ const FBOParticles = () => {
     0, 1   // top-left
   ]);
 
-  const renderTarget = useFBO(size, size, {
+  const renderTarget = useFBO(width, height, {
     minFilter: NearestFilter,
     magFilter: NearestFilter,
     format: RGBAFormat,
@@ -79,7 +79,7 @@ const FBOParticles = () => {
       particles[i3 + 1] = i / width / width;
     }
     return particles;
-  }, [size]);
+  }, [width, height]);
 
   const uniforms = useMemo(() => ({
     uPositions: {
@@ -107,7 +107,7 @@ const FBOParticles = () => {
     <>
       {createPortal(
         <mesh>
-          <simulationMaterial ref={simulationMaterialRef} args={[size]} />
+          <simulationMaterial ref={simulationMaterialRef} args={[size, width, height]} />
           <bufferGeometry>
             <bufferAttribute
               attach="attributes-position"
@@ -125,7 +125,7 @@ const FBOParticles = () => {
         </mesh>,
         scene
       )}
-      <group position={[-size/2, -size/2, 0]}>
+      <group position={[-width/2, -height/2, 0]}>
         <points ref={points}>
           <bufferGeometry>
             <bufferAttribute

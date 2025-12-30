@@ -1,10 +1,14 @@
-import { DataTexture, ShaderMaterial, RGBAFormat, FloatType, MathUtils } from "three";
+import { DataTexture, ShaderMaterial, RGBAFormat, FloatType, MathUtils, Vector2 } from "three";
 
 const vertexShader = /*glsl*/
 `varying vec2 vUv;
+ varying vec2 vPUv;
+ uniform vec2 uTextureSize;
 
 void main() {
   vUv = uv;
+  vec2 puv = position.xy / uTextureSize;
+  vPUv = puv;
 
   vec4 modelPosition = modelMatrix * vec4(position, 1.0);
   vec4 viewPosition = viewMatrix * modelPosition;
@@ -21,6 +25,7 @@ uniform float uTime;
 uniform float uFrequency;
 
 varying vec2 vUv;
+varying vec2 vPUv;
 
 void main() {
   float time = sin(uTime);
@@ -68,20 +73,20 @@ const getPositionEnd = (width, height) => {
 };
 
 class SimulationMaterial extends ShaderMaterial {
-  constructor(size) {
+  constructor(size, width, height) {
     const positionsTextureA = new DataTexture(
-      getPositionStart(size, size),
-      size,
-      size,
+      getPositionStart(width, height),
+      width,
+      height,
       RGBAFormat,
       FloatType
     );
     positionsTextureA.needsUpdate = true;
 
     const positionsTextureB = new DataTexture(
-      getPositionEnd(size, size),
-      size,
-      size,
+      getPositionEnd(width, height),
+      width,
+      height,
       RGBAFormat,
       FloatType
     );
@@ -91,6 +96,7 @@ class SimulationMaterial extends ShaderMaterial {
       positionsA: { value: positionsTextureA },
       positionsB: { value: positionsTextureB },
       uFrequency: { value: 0.25 },
+      uTextureSize: { value: new Vector2(width, height)},
       uTime: { value: 0 },
     };
 
