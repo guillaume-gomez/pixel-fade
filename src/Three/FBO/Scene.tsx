@@ -1,7 +1,7 @@
 import { OrbitControls, useFBO } from "@react-three/drei";
 import { Canvas, useFrame, extend, createPortal } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
-import { NearestFilter, RGBAFormat, FloatType, Scene, OrthographicCamera, AdditiveBlending } from "three";
+import { NearestFilter, RGBAFormat, FloatType, Scene, OrthographicCamera, AdditiveBlending, PlaneGeometry } from "three";
 import { GizmoHelper, GizmoViewport, Stage, Stats, CameraControls } from '@react-three/drei';
 import { EffectComposer, Vignette, ChromaticAberration, Bloom, Grid as GridP } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
@@ -11,6 +11,7 @@ import SimulationMaterial from './SimulationMaterial';
 
 const vertexShader = /*glsl*/`
 uniform sampler2D uPositions;
+uniform sampler2D uTexture;
 uniform float uTime;
 
 void main() {
@@ -22,9 +23,9 @@ void main() {
 
   gl_Position = projectedPosition;
 
-  gl_PointSize = 3.0;
+  gl_PointSize = 10.0;
   // Size attenuation;
-  gl_PointSize *= step(1.0 - (1.0/64.0), position.x) + 0.5;
+  //gl_PointSize *= step(1.0 - (1.0/64.0), position.x) + 0.5;
 }`;
 
 
@@ -38,7 +39,11 @@ void main() {
 extend({ SimulationMaterial: SimulationMaterial });
 
 const FBOParticles = () => {
+  const fboRef = useRef(null)
   const size = 128;
+
+  const width = size;
+  const height = size;
 
   // This reference gives us direct access to our points
   const points = useRef();
@@ -66,12 +71,12 @@ const FBOParticles = () => {
 
   // Generate our positions attributes array
   const particlesPosition = useMemo(() => {
-    const length = size * size;
+    const length = width * height;
     const particles = new Float32Array(length * 3);
     for (let i = 0; i < length; i++) {
       let i3 = i * 3;
-      particles[i3 + 0] = (i % size) / size;
-      particles[i3 + 1] = i / size / size;
+      particles[i3 + 0] = (i % width) / width;
+      particles[i3 + 1] = i / width / width;
     }
     return particles;
   }, [size]);
@@ -79,6 +84,9 @@ const FBOParticles = () => {
   const uniforms = useMemo(() => ({
     uPositions: {
       value: null,
+    },
+    uTexture: {
+      value: null
     }
   }), [])
 
@@ -117,23 +125,25 @@ const FBOParticles = () => {
         </mesh>,
         scene
       )}
-      <points ref={points}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={particlesPosition.length / 3}
-            array={particlesPosition}
-            itemSize={3}
+      <group position={[-size/2, -size/2, 0]}>
+        <points ref={points}>
+          <bufferGeometry>
+            <bufferAttribute
+              attach="attributes-position"
+              count={particlesPosition.length / 3}
+              array={particlesPosition}
+              itemSize={3}
+            />
+          </bufferGeometry>
+          <shaderMaterial
+            blending={AdditiveBlending}
+            depthWrite={false}
+            fragmentShader={fragmentShader}
+            vertexShader={vertexShader}
+            uniforms={uniforms}
           />
-        </bufferGeometry>
-        <shaderMaterial
-          blending={AdditiveBlending}
-          depthWrite={false}
-          fragmentShader={fragmentShader}
-          vertexShader={vertexShader}
-          uniforms={uniforms}
-        />
-      </points>
+        </points>
+      </group>
     </>
   );
 };
@@ -141,9 +151,9 @@ const FBOParticles = () => {
 const SceneTest = () => {
   return (
     <div className="w-full h-screen">
-    <Canvas camera={{ position: [1.5, 1.5, 2.5] }}>
+    <Canvas camera={{ position: [0, 0, 100],  far: 500 }}>
       <ambientLight intensity={0.5} />
-      <color attach="background" args={["red"]} />
+      <color attach="background" args={["#6707A6"]} />
       <Stats/>
       <FBOParticles />
       <EffectComposer enableNormalPass={false}>

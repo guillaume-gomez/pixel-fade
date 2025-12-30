@@ -23,18 +23,18 @@ uniform float uFrequency;
 varying vec2 vUv;
 
 void main() {
-  float time = abs(sin(uTime * 0.35));
+  float time = sin(uTime);
 
-  vec3 spherePositions = texture2D(positionsA, vUv).rgb;
-  vec3 boxPositions = texture2D(positionsB, vUv).rgb;
+  vec3 positionStart = texture2D(positionsA, vUv).rgb;
+  vec3 positionEnd = texture2D(positionsB, vUv).rgb;
 
-  vec3 pos = mix(boxPositions, spherePositions, time);
+  vec3 pos = mix(positionStart, positionEnd, time);
 
   gl_FragColor = vec4(pos, 1.0);
 }
 `;
 
-const getRandomDataSphere = (width, height) => {
+const getPositionStart = (width, height) => {
   // we need to create a vec4 since we're passing the positions to the fragment shader
   // data textures need to have 4 components, R, G, B, and A
   const length = width * height * 4 
@@ -43,30 +43,26 @@ const getRandomDataSphere = (width, height) => {
   for (let i = 0; i < length; i++) {
     const stride = i * 4;
 
-    const distance = Math.sqrt((Math.random())) * 2.0;
-    const theta = MathUtils.randFloatSpread(360); 
-    const phi = MathUtils.randFloatSpread(360); 
-
-    data[stride] =  distance * Math.sin(theta) * Math.cos(phi)
-    data[stride + 1] =  distance * Math.sin(theta) * Math.sin(phi);
-    data[stride + 2] =  distance * Math.cos(theta);
+    data[stride] = (i % width);
+    data[stride + 1] = (Math.floor(i / width));
+    data[stride + 2] = 0;
     data[stride + 3] =  1.0; // this value will not have any impact
   }
   
   return data;
 }
 
-const getRandomDataBox = (width, height) => {
+const getPositionEnd = (width, height) => {
   var len = width * height * 4;
   var data = new Float32Array(len);
 
   for (let i = 0; i < data.length; i++) {
     const stride = i * 4;
 
-    data[stride] = (Math.random() - 0.5) * 2.0;
-    data[stride + 1] = (Math.random() - 0.5) * 2.0;
-    data[stride + 2] = (Math.random() - 0.5) * 2.0;
-    data[stride + 3] = 1.0;
+    data[stride] = (i % width);
+    data[stride + 1] = (Math.floor(i / width));
+    data[stride + 2] = Math.random() * 10.;
+    data[stride + 3] =  1.0; // this value will not have any impact
   }
   return data;
 };
@@ -74,7 +70,7 @@ const getRandomDataBox = (width, height) => {
 class SimulationMaterial extends ShaderMaterial {
   constructor(size) {
     const positionsTextureA = new DataTexture(
-      getRandomDataSphere(size, size),
+      getPositionStart(size, size),
       size,
       size,
       RGBAFormat,
@@ -83,7 +79,7 @@ class SimulationMaterial extends ShaderMaterial {
     positionsTextureA.needsUpdate = true;
 
     const positionsTextureB = new DataTexture(
-      getRandomDataBox(size, size),
+      getPositionEnd(size, size),
       size,
       size,
       RGBAFormat,
