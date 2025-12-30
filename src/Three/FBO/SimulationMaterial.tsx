@@ -30,8 +30,8 @@ varying vec2 vPUv;
 void main() {
   float time = sin(uTime);
 
-  vec3 positionStart = texture2D(positionsA, vUv).rgb;
-  vec3 positionEnd = texture2D(positionsB, vUv).rgb;
+  vec3 positionStart = texture2D(positionsA, vUv).xyz;
+  vec3 positionEnd = texture2D(positionsB, vUv).xyz;
 
   vec3 pos = mix(positionStart, positionEnd, time);
 
