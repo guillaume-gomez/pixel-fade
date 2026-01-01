@@ -79,8 +79,6 @@ function instancedBufferGeometry(
         const angles = new InstancedBufferAttribute(anglesArray, 1);
         //const indices = new InstancedBufferAttribute(indicesArray, 1);
 
-        console.log(geometry.index)
-        
         return {
             index: geometry.index,
             attribs: {
