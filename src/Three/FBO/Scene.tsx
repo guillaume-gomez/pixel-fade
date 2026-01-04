@@ -40,13 +40,13 @@ const vertexShader = /*glsl*/`
 
 const fragmentShader = /*glsl*/`
   uniform sampler2D uTexture;
-  
+
   varying vec2 vUv;
   varying vec2 vPUv;
 
   void main() {
-    //vec3 color = vec3(0.34, 0.53, 0.96);
-    vec3 color = texture2D(uTexture,vUv).rgb;
+    vec3 color = vec3(0.34, 0.53, 0.96);
+    //vec3 color = texture2D(uTexture,vUv).rgb;
     gl_FragColor = vec4(color, 1.0);
   }
 `;
