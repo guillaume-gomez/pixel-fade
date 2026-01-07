@@ -24,8 +24,13 @@ const MaterialPoint = shaderMaterial(
       vUv = uv;
       vPUv = position.xy;
 
-      vec3 pos = texture2D(uPositions, position.xy).xyz;
+      float ratioX = (128. / uTextureSize.x);
+      float ratioY = (128. / uTextureSize.y);
 
+      vec3 pos = texture2D(uPositions, position.xy).xyz;
+      pos.x = (pos.x / ratioX);
+      pos.y = (pos.y / ratioY);
+      
       vec4 modelPosition = modelMatrix * vec4(pos, 1.0);
       vec4 viewPosition = viewMatrix * modelPosition;
       vec4 projectedPosition = projectionMatrix * viewPosition;
