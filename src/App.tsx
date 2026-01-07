@@ -13,20 +13,41 @@ function App() {
   const [count, setCount] = useState(0)
   
   const {
-    image, setImage,
-    width, setWidth,
-    height, setHeight,
-    geometryType, setGeometryType,
-    size, setSize,
-    fbmFrequency, setFbmFrequency,
-    fbmSpeed, setFbmSpeed,
-    fbmAmplitude, setFbmAmplitude,
-    backgroundColor, setBackgroundColor
+    image,
+    geometryType,
+    size,
+    fbmFrequency,
+    fbmSpeed,
+    fbmAmplitude,
+    luminance
   } = useContext(SettingsContext);
 
   return (
-    <>
-      <div>
+    <div className="w-full h-screen">
+      <div className="lg:absolute md:static lg:top-8 lg:left-8 lg:max-w-xs md:max-w-full md:w-full z-10">
+        <Form />
+      </div>
+
+      <div className="w-full h-full">
+        {
+          image?.src && (
+            <ThreejsRenderer
+              base64Texture={image?.src}
+              config={{
+                geometryType,
+                size,
+                fbmFrequency,
+                fbmSpeed,
+                fbmAmplitude,
+                luminance,
+                optimised: true
+              }}
+            />
+          )
+        }
+      </div>
+      <div className="card">
+         <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -35,29 +56,6 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
-      <Form />
-
-      <div>
-        {
-          image?.src && (
-            <ThreejsRenderer
-              backgroundColor={backgroundColor}
-              width={width}
-              height={height}
-              base64Texture={image?.src}
-              config={{
-                geometryType,
-                size,
-                fbmFrequency,
-                fbmSpeed,
-                fbmAmplitude,
-                optimised: true
-              }}
-            />
-          )
-        }
-      </div>
-      <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
@@ -68,7 +66,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-    </>
+    </div>
   )
 }
 
