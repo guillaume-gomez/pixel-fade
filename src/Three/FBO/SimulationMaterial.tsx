@@ -2,14 +2,10 @@ import { DataTexture, ShaderMaterial, RGBAFormat, FloatType, MathUtils, Vector2 
 
 const vertexShader = /*glsl*/
 `varying vec2 vUv;
- varying vec2 vPUv;
- uniform vec2 uTextureSize;
-
+ 
 void main() {
   vUv = uv;
-  vec2 puv = position.xy / uTextureSize;
-  vPUv = puv;
-
+  
   vec4 modelPosition = modelMatrix * vec4(position, 1.0);
   vec4 viewPosition = viewMatrix * modelPosition;
   vec4 projectedPosition = projectionMatrix * viewPosition;
@@ -25,10 +21,9 @@ uniform float uTime;
 uniform float uFrequency;
 
 varying vec2 vUv;
-varying vec2 vPUv;
 
 void main() {
-  float time = sin(uTime);
+  float time = 3.0 * sin(uTime);
 
   vec3 positionStart = texture2D(positionsA, vUv).xyz;
   vec3 positionEnd = texture2D(positionsB, vUv).xyz;
@@ -96,7 +91,6 @@ class SimulationMaterial extends ShaderMaterial {
       positionsA: { value: positionsTextureA },
       positionsB: { value: positionsTextureB },
       uFrequency: { value: 0.25 },
-      uTextureSize: { value: new Vector2(width, height)},
       uTime: { value: 0 },
     };
 
