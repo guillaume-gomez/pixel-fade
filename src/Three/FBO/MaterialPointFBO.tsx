@@ -2,7 +2,7 @@ import { shaderMaterial } from "@react-three/drei";
 import { Vector2 } from "three";
 
 
-const MaterialPoint = shaderMaterial(
+const MaterialPointFBO = shaderMaterial(
   { 
     uTexture: null,
     uTextureSize: new Vector2(),
@@ -30,7 +30,7 @@ const MaterialPoint = shaderMaterial(
       vec3 pos = texture2D(uPositions, position.xy).xyz;
       pos.x = (pos.x / ratioX);
       pos.y = (pos.y / ratioY);
-      
+
       
       vec4 modelPosition = modelMatrix * vec4(pos, 1.0);
       vec4 viewPosition = viewMatrix * modelPosition;
@@ -59,4 +59,4 @@ const MaterialPoint = shaderMaterial(
   `
 )
 
-export default MaterialPoint;
+export default MaterialPointFBO;
