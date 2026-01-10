@@ -40,7 +40,7 @@ const MaterialPointFBO = shaderMaterial(
 
       gl_PointSize = 10.0;
       // Size attenuation;
-      //gl_PointSize *= step(1.0 - (1.0/64.0), position.x) + 0.5;
+      gl_PointSize *= step(1.0 - (1.0/64.0), pos.x) + 0.5;
     }
   `,
   // fragment shader
