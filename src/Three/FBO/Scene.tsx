@@ -1,8 +1,27 @@
 import { OrbitControls, useFBO } from "@react-three/drei";
 import { Canvas, useFrame, extend, createPortal, useLoader } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
-import { CameraHelper, NearestFilter, RGBAFormat, FloatType, Scene, OrthographicCamera, AdditiveBlending, PlaneGeometry, TextureLoader, Vector2 } from "three";
-import { GizmoHelper, GizmoViewport, Stage, Stats, CameraControls, useHelper } from '@react-three/drei';
+import { 
+  CameraHelper,
+  NearestFilter,
+  RGBAFormat,
+  FloatType,
+  Scene,
+  OrthographicCamera,
+  AdditiveBlending,
+  PlaneGeometry,
+  TextureLoader,
+  Vector2,
+} from "three";
+import { 
+  GizmoHelper,
+  GizmoViewport,
+  Stage,
+  Stats,
+  CameraControls,
+  useHelper,
+  Grid
+} from '@react-three/drei';
 import { EffectComposer, Vignette, ChromaticAberration, Bloom, Grid as GridP } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import Range from "../../components/Range";
@@ -66,21 +85,6 @@ const FBOParticles = ({ red, widthTexture = 450, heighTexture = 650 }) => {
     }
     return particles;
   }, [width, height]);
-
-  const uniforms = useMemo(() => ({
-    uPositions: {
-      value: null,
-    },
-    uTexture: {
-      value: texture
-    },
-    uTextureSize: {
-      value: new Vector2(width, height)
-    },
-    uRed: {
-      value: red
-    }
-  }), [texture, width, height, red])
 
   useFrame((state) => {
     const { gl, clock } = state;
@@ -161,23 +165,26 @@ const SceneTest = () => {
     />
     <Canvas camera={{ position: [0, 0, 500],  far: 1000 }}>
       <ambientLight intensity={0.5} />
-      <color attach="background" args={["#6707A6"]} />
+      <color attach="background" args={["#0007A6"]} />
       <Stats/>
       <FBOParticles red={red} />
+      <Grid args={[1000, 1000]} position={[0,0,0]} cellColor='green' />
+      <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
+        <GizmoViewport labelColor="white" axisHeadScale={1} />
+      </GizmoHelper>
       <EffectComposer enableNormalPass={false}>
-      <Vignette
-        offset={0.1} darkness={0.8} 
-        eskil={false} // Eskil's vignette technique
-        blendFunction={BlendFunction.NORMAL} // blend mode
-      />
-        {/*<Bloom mipmapBlur luminanceThreshold={1.0} />*/}
-        {/*<ChromaticAberration
+        <Vignette
+          offset={0.1} darkness={0.8} 
+          eskil={false} // Eskil's vignette technique
           blendFunction={BlendFunction.NORMAL} // blend mode
-          offset={[0.01, 0.01]} // color offset
-        />*/}
-        {/*<GridP scale={2.0} lineWidth={.0}/>*/}
+        />
+          {/*<Bloom mipmapBlur luminanceThreshold={1.0} />*/}
+          {/*<ChromaticAberration
+            blendFunction={BlendFunction.NORMAL} // blend mode
+            offset={[0.01, 0.01]} // color offset
+          />*/}
       </EffectComposer>
-      <OrbitControls ref={cameraRef} />
+      <CameraControls ref={cameraRef} />
     </Canvas>
   </div>
   );
