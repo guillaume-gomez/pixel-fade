@@ -68,7 +68,10 @@ const getPositionEnd = (width, height) => {
 };
 
 class SimulationMaterial extends ShaderMaterial {
-  constructor(size, width, height) {
+  constructor(size) {
+    const width = size;
+    const height = size;
+    
     const positionsTextureA = new DataTexture(
       getPositionStart(width, height),
       width,
