@@ -3,7 +3,7 @@ import { SettingsContext } from "../SettingsContext";
 
 import { Canvas } from '@react-three/fiber';
 //import PixelFade from "./PixelFade";
-import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls } from '@react-three/drei';
+import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls, Text } from '@react-three/drei';
 import { type Mesh} from "three";
 import FallBackLoader from "./FallBackLoader";
 import { EffectComposer, Vignette, ChromaticAberration, Bloom } from '@react-three/postprocessing';
@@ -94,16 +94,8 @@ function ThreejsRenderer({
           { import.meta.env.MODE === "development" ? <Stats/> : <></> }
           <ambientLight intensity={1.5} />
           <color attach="background" args={[backgroundColor]} />
-          <fog attach="fog" args={['red', 20, -5]} />
           <pointLight position={[10, 10, 10]} intensity={1} castShadow />
             <Stage adjustCamera={false} intensity={1} shadows="contact" environment={null/*'city'*/}>
-                {/*<directionalLight
-                  color={"#FF0000"}
-                  position={[0,0, -10]}
-                  castShadow
-                  intensity={Math.PI * 2}
-                />*/}
- 
                 <Suspense fallback={<FallBackLoader/>} >
                   <InstanceMesh
                     width={width}
@@ -122,6 +114,19 @@ function ThreejsRenderer({
                   { MODE === "development" &&
                     <Grid args={[1000, 1000]} position={[0,0,0]} cellColor='green' />
                   }
+                  <Text
+                    //font={`${BASE_URL}/fonts/good-bakwan.woff`}
+                    color={0x000000}
+                    fontSize={1.2}
+                    letterSpacing={0}
+                    anchorY="top"
+                    anchorX="center"
+                    lineHeight={0.8}
+                    rotation={[0,Math.PI/2,0]}
+                    position={[-4, 21, 0]}
+                  >
+                    Guillaume
+                  </Text>
               </Suspense>
             </Stage>
           { MODE === "development" &&
@@ -136,17 +141,17 @@ function ThreejsRenderer({
               blendFunction={BlendFunction.NORMAL} // blend mode
             />
             <Bloom mipmapBlur luminanceThreshold={1.0} />
-            {/*<ChromaticAberration
+            <ChromaticAberration
               blendFunction={BlendFunction.NORMAL} // blend mode
               offset={[chromaticOffset, chromaticOffset]} // color offset
-            />*/}
+            />
             {/*<GridP scale={0.0} lineWidth={.0}/>*/}
           </EffectComposer>
           <CameraControls
             ref={cameraControllerRef}
             makeDefault
-            smoothTime={1.0}
-            minPolarAngle={0}
+            smoothTime={2.}
+            minPolarAngle={Math.PI / 3}
             maxPolarAngle={Math.PI / 1.9}
             minAzimuthAngle={-0.55}
             maxAzimuthAngle={0.55}
