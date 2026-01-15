@@ -1,6 +1,6 @@
 import { OrbitControls, useFBO } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { useRef, useState } from "react";
+import { useRef, useState, Suspense } from "react";
 import { 
   GizmoHelper,
   GizmoViewport,
@@ -10,10 +10,13 @@ import {
   useHelper,
   Grid,
 } from '@react-three/drei';
+import { Color } from "three";
 import { EffectComposer, Vignette, ChromaticAberration, Bloom, Grid as GridP } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
+import SenaarEffect from "../Effect/Senaar/SeenarShaderEffect";
 import Range from "../../components/Range";
 import FBOParticles from "./FBOParticles";
+import FallbackLoader from "../FallbackLoader";
 
 const SceneTest = () => {
   const [red, setRed] = useState<number>(1.);
@@ -36,6 +39,7 @@ const SceneTest = () => {
       <ambientLight intensity={0.5} />
       <color attach="background" args={["#0007A6"]} />
       <Stats/>
+      <Suspense fallaback={FallbackLoader}>
       <FBOParticles red={red} />
       <Grid args={[1000, 1000]} position={[0,0,0]} cellColor='green' />
       <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
@@ -47,12 +51,21 @@ const SceneTest = () => {
           eskil={false} // Eskil's vignette technique
           blendFunction={BlendFunction.NORMAL} // blend mode
         />
-          {/*<Bloom mipmapBlur luminanceThreshold={1.0} />*/}
-          {/*<ChromaticAberration
-            blendFunction={BlendFunction.NORMAL} // blend mode
-            offset={[0.01, 0.01]} // color offset
-          />*/}
-      </EffectComposer>
+        {/*<Bloom mipmapBlur luminanceThreshold={1.0} />*/}
+        {/*<ChromaticAberration
+          blendFunction={BlendFunction.NORMAL} // blend mode
+          offset={[0.01, 0.01]} // color offset
+        />*/}
+        <SenaarEffect
+          param={{
+              color: new Color(0xFF9009),
+              enableStripe: true,
+              stripeDirection: -2.0,
+              gradiantCurve: 0.5
+            }}
+        />
+        </EffectComposer>
+      </Suspense>
       <CameraControls ref={cameraRef} />
       <GizmoHelper
         alignment="bottom-right"
