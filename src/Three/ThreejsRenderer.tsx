@@ -3,7 +3,7 @@ import { SettingsContext } from "../SettingsContext";
 
 import { Canvas } from '@react-three/fiber';
 //import PixelFade from "./PixelFade";
-import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls } from '@react-three/drei';
+import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls, Text3D, Center } from '@react-three/drei';
 import { type Mesh} from "three";
 import FallBackLoader from "./FallBackLoader";
 import { EffectComposer, Vignette, ChromaticAberration, Bloom } from '@react-three/postprocessing';
@@ -11,7 +11,6 @@ import { BlendFunction } from 'postprocessing';
 
 import InstanceMesh, { type Config } from "./ParticleWithBufferGeometry/InstancedBufferGeometry";
 import InstancedBufferGeometryPoints from "./ParticleWithPoints/InstancedBufferGeometryPoints";
-
 
 const { /*BASE_URL,*/ MODE } = import.meta.env;
 
@@ -96,15 +95,32 @@ function ThreejsRenderer({
           <color attach="background" args={[backgroundColor]} />
           <fog attach="fog" args={['red', 20, -5]} />
           <pointLight position={[10, 10, 10]} intensity={1} castShadow />
-            <Stage adjustCamera={false} intensity={1} shadows="contact" environment={null/*'city'*/}>
-                {/*<directionalLight
-                  color={"#FF0000"}
-                  position={[0,0, -10]}
-                  castShadow
-                  intensity={Math.PI * 2}
-                />*/}
- 
+            <Stage adjustCamera={false} intensity={1} shadows="contact" environment={"sunset"}>
+                <ambientLight intensity={0.5} />
+                <spotLight position={[0, 10, 0]} intensity={0.3} />
+                <directionalLight position={[-50, 0, -40]} intensity={0.7} />
+                
+                 
                 <Suspense fallback={<FallBackLoader/>} >
+                   <Center>
+                     <Text3D
+                      letterSpacing={-0.06}
+                      size={40}
+                      font="/Inter_Bold.json"
+                      curveSegments={32}
+                      bevelEnabled
+                      bevelSize={0.04}
+                      bevelThickness={5}
+                      height={0.5}
+                      lineHeight={0.5}
+                      letterSpacing={-0.06}
+                      visible={true}
+                    >
+                      Floating pixels
+                      <meshStandardMaterial color="purple" />
+                    </Text3D>
+                  </Center>
+
                   <InstanceMesh
                     width={width}
                     height={height} 
