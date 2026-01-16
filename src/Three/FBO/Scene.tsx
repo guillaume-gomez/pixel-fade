@@ -10,11 +10,13 @@ import {
   CameraControls,
   useHelper,
   Grid,
+  RoundedBox,
+  Environment
 } from '@react-three/drei';
 import { EffectComposer, Vignette, ChromaticAberration, Bloom, Grid as GridP } from '@react-three/postprocessing';
 import { Color } from "three";
 import { BlendFunction } from 'postprocessing';
-import SenaarEffect from "../Effect/LutShaderEffect";
+import LutEffect from "../Effect/Lut/LutShaderEffect";
 import Range from "../../components/Range";
 import FBOParticles from "./FBOParticles";
 
@@ -35,13 +37,25 @@ const SceneTest = () => {
       step={0.1}
       float={true}
     />
-    <Canvas camera={{ position: [0, 0, 500],  far: 1000 }}>
+    <Canvas camera={{ position: [0, 0, 500], near: 0.1,  far: 1000 }}>
       <ambientLight intensity={0.5} />
-      <color attach="background" args={["#0007A6"]} />
       <Stats/>
+      <color attach="background" args={["#0007A6"]} />
       <Suspense fallback={<FallBackLoader/>}>
-        <FBOParticles red={red} />
-        <Grid args={[1000, 1000]} position={[0,0,0]} cellColor='green' />
+        
+          <FBOParticles red={red} />
+          <RoundedBox
+            args={[1, 1, 1]} // Width, height, depth. Default is [1, 1, 1]
+            radius={0.05} // Radius of the rounded corners. Default is 0.05
+            steps={1} // Extrusion steps. Default is 1
+            smoothness={4} // The number of curve segments. Default is 4
+            bevelSegments={4} // The number of bevel segments. Default is 4, setting it to 0 removes the bevel, as a result the texture is applied to the whole geometry.
+            creaseAngle={0.4} // Smooth normals everywhere except faces that meet at an angle greater than the crease angle
+          >
+            <meshPhongMaterial color="#f3f3f3" />
+          </RoundedBox>
+          <Grid args={[1000, 1000]} position={[0,0,0]} cellColor='green' />
+        
         <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
           <GizmoViewport labelColor="white" axisHeadScale={1} />
         </GizmoHelper>
@@ -51,11 +65,9 @@ const SceneTest = () => {
             eskil={false} // Eskil's vignette technique
             blendFunction={BlendFunction.NORMAL} // blend mode
           />
-          <SenaarEffect
+          <LutEffect
             param={{
-                color: new Color(0x909000),
-                enableStripe: true,
-                stripeDirection: -4.0, gradiantCurve: 0.5
+                enable: true,
               }}
           />
             {/*<Bloom mipmapBlur luminanceThreshold={1.0} />*/}
@@ -64,6 +76,7 @@ const SceneTest = () => {
               offset={[0.01, 0.01]} // color offset
             />*/}
         </EffectComposer>
+      
       </Suspense>
       <CameraControls ref={cameraRef} />
       <GizmoHelper
