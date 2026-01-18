@@ -37,7 +37,7 @@ const SceneTest = () => {
     />
     <Canvas camera={{ position: [0, 0, 500],  far: 1000 }}>
       <ambientLight intensity={0.5} />
-      <color attach="background" args={["#0007A6"]} />
+      <color attach="background" args={["#0000FF"]} />
       <Stats/>
       <Suspense fallaback={FallbackLoader}>
       <FBOParticles red={red} />
@@ -58,7 +58,7 @@ const SceneTest = () => {
         />*/}
         <SenaarEffect
           param={{
-              color: new Color(0xFF9009),
+              color: new Color(0xFF0000),
               enableStripe: true,
               stripeDirection: -2.0,
               gradiantCurve: 0.5
