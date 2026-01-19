@@ -52,7 +52,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
     color.b = mix(left.b, right.b, fract(color.b * 15.0));
 
     outputColor.rgb = pow(color.rgb, vec3(gamma.x));
-  
+    //outputColor = vec4(pow(color.rgb, vec3(gamma.x)), inputColor.a);
 }`;
 
 export default LutShader; 

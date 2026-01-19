@@ -104,6 +104,14 @@ class SenaarEffect extends Effect {
     }
   }
 
+  setGamma(value: Vector2): void {
+    const gamma = this.uniforms.get("gamma");
+    console.log(gamma)
+    if (gamma !== undefined) {
+      gamma.value = value;
+    }
+  }
+
   // add setters
   
 
@@ -117,7 +125,6 @@ const SenaarEffectWrapper = forwardRef(({ param } : SenaarEffectOptions, ref) =>
     '/lookup-table-1.png'
   ]);
   const effect = useMemo(() => new SenaarEffect({param, ...textureNeutral, textureModified}), [param, textureNeutral, textureModified])
-  console.log(effect)
   return <primitive ref={ref} object={effect} dispose={null} />
 });
 
