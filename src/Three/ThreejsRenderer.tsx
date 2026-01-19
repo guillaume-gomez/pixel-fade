@@ -117,7 +117,7 @@ function ThreejsRenderer({
                       visible={true}
                     >
                       Floating pixels
-                      <meshStandardMaterial color="purple" />
+                      <meshStandardMaterial color={backgroundColor} />
                     </Text3D>
                   </Center>
 
