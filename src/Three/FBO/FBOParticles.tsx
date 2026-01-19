@@ -26,7 +26,7 @@ const imageBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAQC
 const scene = new Scene();
 const camera = new OrthographicCamera(-1, 1, 1, -1, 1 / Math.pow(2, 53), 1);
 
-const FBOParticles = ({ red, widthTexture = 450, heighTexture = 650 }) => {
+const FBOParticles = ({ gamma, widthTexture = 450, heighTexture = 650 }) => {
   const fboRef = useRef(null);
   const [texture] = useLoader(TextureLoader, [imageBase64]);
 
@@ -118,7 +118,7 @@ const FBOParticles = ({ red, widthTexture = 450, heighTexture = 650 }) => {
             uPositions={null}
             uTexture={texture}
             uTextureSize={new Vector2(widthTexture, heighTexture)}
-            uRed={red}
+            uGamma={gamma}
           />
         </points>
       </group>

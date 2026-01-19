@@ -14,14 +14,15 @@ import {
   Environment
 } from '@react-three/drei';
 import { EffectComposer, Vignette, ChromaticAberration, Bloom, Grid as GridP } from '@react-three/postprocessing';
-import { Color } from "three";
+import { Color, Vector2 } from "three";
 import { BlendFunction } from 'postprocessing';
 import LutEffect from "../Effect/Lut/LutShaderEffect";
 import Range from "../../components/Range";
 import FBOParticles from "./FBOParticles";
 
 const SceneTest = () => {
-  const [red, setRed] = useState<number>(1.);
+  const [gammaX, setGammaX] = useState<number>(1.);
+  const [gammaY, setGammaY] = useState<number>(1.);
   const cameraRef = useRef(null);
   //useHelper(cameraRef, CameraHelper, 1, 'hotpink');  
   
@@ -29,9 +30,18 @@ const SceneTest = () => {
   return (
     <div className="w-full h-screen">
     <Range
-      label="Red"
-      value={red}
-      onChange={(value) => setRed(value)}
+      label="X"
+      value={gammaX}
+      onChange={(value) => setGammaX(value)}
+      min={0.0}
+      max={1.0}
+      step={0.1}
+      float={true}
+    />
+    <Range
+      label="Y"
+      value={gammaY}
+      onChange={(value) => setGammaY(value)}
       min={0.0}
       max={1.0}
       step={0.1}
@@ -43,7 +53,7 @@ const SceneTest = () => {
       <color attach="background" args={["#0007A6"]} />
       <Suspense fallback={<FallBackLoader/>}>
         
-          <FBOParticles red={red} />
+          <FBOParticles />
           <RoundedBox
             args={[1, 1, 1]} // Width, height, depth. Default is [1, 1, 1]
             radius={0.05} // Radius of the rounded corners. Default is 0.05
@@ -68,6 +78,7 @@ const SceneTest = () => {
           <LutEffect
             param={{
                 enable: true,
+                gamma: new Vector2(gammaX, gammaY)
               }}
           />
             {/*<Bloom mipmapBlur luminanceThreshold={1.0} />*/}
