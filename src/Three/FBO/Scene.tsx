@@ -1,5 +1,5 @@
 import { OrbitControls, useFBO, RoundedBox } from "@react-three/drei";
-import { Canvas, extend } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { useRef, useState, Suspense } from "react";
 import { 
   GizmoHelper,
@@ -18,8 +18,6 @@ import Range from "../../components/Range";
 import FBOParticles from "./FBOParticles";
 import FallbackLoader from "../FallbackLoader";
 import VaranoiMaterial from "../Material/VaranoiMaterial";
-
-extend({ VaranoiMaterial });
 
 const SceneTest = () => {
   const [red, setRed] = useState<number>(1.);
@@ -56,10 +54,10 @@ const SceneTest = () => {
             creaseAngle={0.4} // Smooth normals everywhere except faces that meet at an angle greater than the crease angle
           >
             {/*<meshPhongMaterial color="#f3f3f3" />*/}
-            <varanoiMaterial
-              uTime={1.0}
-              uResolution={new Vector2(100, 100)}
-              uMouse={new Vector2(1,1)}
+            <VaranoiMaterial
+              width={200}
+              height={200}
+              mousePosition={new Vector2(1,1)}
             />
           </RoundedBox>
           <Grid args={[1000, 1000]} position={[0,0,0]} cellColor='green' />
@@ -68,11 +66,11 @@ const SceneTest = () => {
           <GizmoViewport labelColor="white" axisHeadScale={1} />
         </GizmoHelper>
         <EffectComposer enableNormalPass={false}>
-          <Vignette
+          {/*<Vignette
             offset={0.1} darkness={0.8} 
             eskil={false} // Eskil's vignette technique
             blendFunction={BlendFunction.NORMAL} // blend mode
-          />
+          />*/}
           <SenaarEffect
           param={{
               color: new Color(0xFF0000),
