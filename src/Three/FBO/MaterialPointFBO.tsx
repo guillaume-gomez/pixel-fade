@@ -10,8 +10,8 @@ const MaterialPointFBO = shaderMaterial(
     uPositions: null,
     uRed: 1.0
   },
-  // vertex shader
-  /*glsl*/`
+    // vertex shader
+    /*glsl*/`
     uniform sampler2D uPositions;
     uniform sampler2D uTexture;
     uniform float uTime;
@@ -30,6 +30,7 @@ const MaterialPointFBO = shaderMaterial(
       vec3 pos = texture2D(uPositions, position.xy).xyz;
       pos.x = (pos.x / ratioX);
       pos.y = (pos.y / ratioY);
+      // pos.z = 0.;
 
       
       vec4 modelPosition = modelMatrix * vec4(pos, 1.0);
@@ -43,8 +44,8 @@ const MaterialPointFBO = shaderMaterial(
       gl_PointSize *= step(1.0 - (1.0/64.0), pos.x) + 0.5;
     }
   `,
-  // fragment shader
-  /*glsl*/`
+    // fragment shader
+    /*glsl*/`
     uniform sampler2D uTexture;
     uniform float uRed;
 
@@ -52,8 +53,11 @@ const MaterialPointFBO = shaderMaterial(
     varying vec2 vPUv;
 
     void main() {
-      //vec3 color = vec3(uRed, 0.53, 0.96);
+      // debug with next line
+      //vec3 color = vec3(1.0, 0.53, 0.96);
+      //else
       vec3 color = texture2D(uTexture,vPUv).rgb;
+      
       gl_FragColor = vec4(color, 1.0);
     }  
   `
