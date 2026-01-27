@@ -18,7 +18,8 @@ function Form() {
     fbmSpeed, setFbmSpeed,
     fbmAmplitude, setFbmAmplitude,
     backgroundColor, setBackgroundColor,
-    luminance, setLuminance
+    luminance, setLuminance,
+    firstRender, setFirstRender
   } = useContext(SettingsContext);
   const [collapse, setCollapse] = useState<boolean>(false);
 
@@ -32,6 +33,8 @@ function Form() {
     
     setWidth(expectedWidth);
     setHeight(expectedHeight);
+
+    setFirstRender(false);
   }
 
   return (
@@ -40,71 +43,75 @@ function Form() {
         <span>Settings</span>
         <button onClick={() => setCollapse(!collapse)}> X </button>
       </div> 
-      
-        {!collapse && <div className="card-body p-0">
-        <InputFileWithPreview 
-          onChange={uploadImage}
-          value={image}
-        />
-        <Select
-          label="geometry type"
-          value={geometryType}
-          onChange={(newValue) => setGeometryType(newValue)}
-          options={
-            [
-              {value: "rounded", label: "Rounded"},
-              {value: "rectangle", label: "Rectangle"},
-              {value: "circle", label: "Circle"}
-            ]
-          }
-        />
-        <Range 
-          label="Size"
-          value={size}
-          onChange={(value) => setSize(value)}
-          min={0.1}
-          max={30}
-          step={0.1}
-          float={true}
-        /> 
-        <Range 
-          label="Luminance"
-          value={luminance}
-          onChange={(value) => setLuminance(value)}
-          min={1.0}
-          max={4.0}
-          step={0.1}
-          float={true}
-        /> 
-        <Range 
-          label="fbmFrequency"
-          value={fbmFrequency}
-          onChange={(value) => setFbmFrequency(value)}
-          min={0.1}
-          max={100.0}
-          step={0.1}
-          float={true}
-        /> 
-        <Range 
-          label="fbmSpeed"
-          value={fbmSpeed}
-          onChange={(value) => setFbmSpeed(value)}
-          min={0.1}
-          max={100.0}
-          step={0.1}
-          float={true}
-        /> 
-        <Range 
-          label="fbmAmplitude"
-          value={fbmAmplitude}
-          onChange={(value) => setFbmAmplitude(value)}
-          min={0.1}
-          max={10.0}
-          step={0.1}
-          float={true}
-        /> 
-        </div>
-      }
+        {!collapse && 
+        <div className="card-body p-0">
+          <InputFileWithPreview 
+            onChange={uploadImage}
+            value={image}
+          />
+          { !firstRender && 
+            <>
+              <Select
+                label="geometry type"
+                value={geometryType}
+                onChange={(newValue) => setGeometryType(newValue)}
+                options={
+                  [
+                    {value: "rounded", label: "Rounded"},
+                    {value: "rectangle", label: "Rectangle"},
+                    {value: "circle", label: "Circle"}
+                  ]
+                }
+              />
+              <Range 
+                label="Size"
+                value={size}
+                onChange={(value) => setSize(value)}
+                min={0.1}
+                max={30}
+                step={0.1}
+                float={true}
+              /> 
+              <Range 
+                label="Luminance"
+                value={luminance}
+                onChange={(value) => setLuminance(value)}
+                min={1.0}
+                max={4.0}
+                step={0.1}
+                float={true}
+              /> 
+              <Range 
+                label="fbmFrequency"
+                value={fbmFrequency}
+                onChange={(value) => setFbmFrequency(value)}
+                min={0.1}
+                max={100.0}
+                step={0.1}
+                float={true}
+              /> 
+              <Range 
+                label="fbmSpeed"
+                value={fbmSpeed}
+                onChange={(value) => setFbmSpeed(value)}
+                min={0.1}
+                max={100.0}
+                step={0.1}
+                float={true}
+              /> 
+              <Range 
+                label="fbmAmplitude"
+                value={fbmAmplitude}
+                onChange={(value) => setFbmAmplitude(value)}
+                min={0.1}
+                max={10.0}
+                step={0.1}
+                float={true}
+              />
+            </>
+          } 
+          </div>
+        }
     </div>
   );
 }
