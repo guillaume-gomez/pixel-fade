@@ -9,8 +9,7 @@ const VaranoiShaderMaterial = shaderMaterial(
     uMouse: new Vector2(),
   },
   // vertex shader
-  /*glsl*/`
-    
+    /*glsl*/`
     varying vec2 vUv;
 
     void main() {
@@ -19,7 +18,7 @@ const VaranoiShaderMaterial = shaderMaterial(
     }
   `,
   // fragment shader
-  /*glsl*/`
+    /*glsl*/`
     uniform float uTime;
     uniform vec2 uResolution;
     uniform vec2 uMouse;
