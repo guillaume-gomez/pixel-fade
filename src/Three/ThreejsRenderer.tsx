@@ -149,7 +149,7 @@ function ThreejsRenderer({
             ref={cameraControllerRef}
             makeDefault
             smoothTime={1.0}
-            minPolarAngle={0}
+            minPolarAngle={0.75}
             maxPolarAngle={Math.PI / 1.9}
             minAzimuthAngle={-0.55}
             maxAzimuthAngle={0.55}
