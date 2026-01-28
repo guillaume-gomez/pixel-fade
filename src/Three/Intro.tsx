@@ -2,11 +2,11 @@ import { Text3D, Center } from '@react-three/drei';
 
 function Intro() {
 	return (
-      <Center>
-       <Text3D
+    <Center>
+      <Text3D
         letterSpacing={-0.06}
         size={40}
-        font="/Inter_Bold.json"
+        font="/Roinert Squared_Italic.json"
         curveSegments={32}
         bevelEnabled
         bevelSize={0.04}
