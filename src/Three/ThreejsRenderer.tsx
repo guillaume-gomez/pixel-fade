@@ -52,7 +52,7 @@ function ThreejsRenderer({
     setTimeout(() => {
       // delay the times to see the particules
       recenter();
-    }, 3000);
+    }, 5000);
 
   },[base64Texture, width, height, cameraControllerRef]);
 
@@ -61,8 +61,6 @@ function ThreejsRenderer({
     if(!meshRef.current || !cameraControllerRef.current) {
       return;
     }
-
-    console.log(meshRef.current)
 
     await cameraControllerRef.current.fitToBox(meshRef.current, true,
       { paddingLeft: width, paddingRight: width, paddingBottom: height, paddingTop: height }
