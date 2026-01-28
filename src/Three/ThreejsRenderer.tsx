@@ -11,6 +11,7 @@ import { BlendFunction } from 'postprocessing';
 
 import InstanceMesh, { type Config } from "./ParticleWithBufferGeometry/InstancedBufferGeometry";
 import InstancedBufferGeometryPoints from "./ParticleWithPoints/InstancedBufferGeometryPoints";
+import Intro from "./Intro";
 
 const { /*BASE_URL,*/ MODE } = import.meta.env;
 
@@ -102,32 +103,18 @@ function ThreejsRenderer({
                 
                  
                 <Suspense fallback={<FallBackLoader/>} >
-                   <Center>
-                     <Text3D
-                      letterSpacing={-0.06}
-                      size={40}
-                      font="/Inter_Bold.json"
-                      curveSegments={32}
-                      bevelEnabled
-                      bevelSize={0.04}
-                      bevelThickness={5}
-                      height={0.5}
-                      lineHeight={0.5}
-                      letterSpacing={-0.06}
-                      visible={true}
-                    >
-                      Floating pixels
-                      <meshStandardMaterial color={backgroundColor} />
-                    </Text3D>
-                  </Center>
+                  { !base64Texture && <Intro /> }
 
-                  <InstanceMesh
-                    width={width}
-                    height={height} 
-                    base64Texture={base64Texture as string}
-                    config={config}
-                    ref={meshRef}
-                  />
+                  {
+                    base64Texture &&
+                    <InstanceMesh
+                      width={width}
+                      height={height} 
+                      base64Texture={base64Texture as string}
+                      config={config}
+                      ref={meshRef}
+                    />
+                  }
                   {/*<InstancedBufferGeometryPoints
                     width={width}
                     height={height} 
