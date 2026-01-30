@@ -1,11 +1,34 @@
-import { Text3D, Center } from '@react-three/drei';
+import { Text3D, Center, MeshDistortMaterial } from '@react-three/drei';
+import { useSpring, animated } from '@react-spring/web'
+import { useEffect,useState } from "react";
+
+const AnimatedText3D = animated(Text3D);
+
 
 function Intro() {
+  const [springs, api] = useSpring(() => (
+      {
+        from: { size: 40},
+      }
+    )
+  );
+
+  useEffect(() => {
+    api.start(
+      {
+        to: {size: 5},
+        config: {
+          duration: 4000
+        }
+      }
+    );
+  }, [])
+
 	return (
     <Center>
-      <Text3D
-        letterSpacing={-0.06}
-        size={40}
+      <AnimatedText3D
+        size={springs.size}
+        letterSpacing={-0.07}
         font="/Roinert Squared_Italic.json"
         curveSegments={32}
         bevelEnabled
@@ -18,7 +41,7 @@ function Intro() {
       >
         Floating pixels
         <meshStandardMaterial color={"orange"} />
-      </Text3D>
+      </AnimatedText3D>
     </Center>
    	);               
 }
