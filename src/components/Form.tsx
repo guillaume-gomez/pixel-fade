@@ -4,7 +4,7 @@ import Range from ".//Range";
 import Select from "./Select";
 import viteLogo from '/vite.svg';
 import { resizeImage, getAverageBackground } from "../utils";
-
+import { useSpring, animated } from '@react-spring/web';
 import { SettingsContext } from "../SettingsContext";
 
 
@@ -24,6 +24,13 @@ function Form() {
     timerIntroInMs
   } = useContext(SettingsContext);
   const [collapse, setCollapse] = useState<boolean>(false);
+
+  const springs = useSpring({
+    transformOrigin: "top",
+    height: "auto",
+    maxHeight: collapse ? 0 : "inherit",
+    transform: collapse ? "scaleY(0)": "scaleY(1)",
+  });
 
   function uploadImage(newImage: HTMLImageElement) {
     setBackgroundColor(getAverageBackground(newImage));
@@ -62,7 +69,7 @@ function Form() {
         <button onClick={() => setCollapse(!collapse)}> X </button>
       </div> 
         {!collapse && 
-        <div className="card-body p-0">
+        <animated.div style={springs} className="card-body p-0">
           <InputFileWithPreview 
             onChange={uploadImage}
             value={image}
@@ -128,7 +135,7 @@ function Form() {
               />
             </>
           } 
-          </div>
+          </animated.div>
         }
     </div>
   );
