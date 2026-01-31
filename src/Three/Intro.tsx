@@ -1,33 +1,37 @@
-import { Text3D, Center, MeshDistortMaterial } from '@react-three/drei';
-import { useSpring, animated } from '@react-spring/web'
-import { useEffect,useState } from "react";
+import { Text3D, Center, GradientTexture, GradientType } from '@react-three/drei';
+import { MeshBasicMaterial } from "three";
+import { easings } from '@react-spring/web';
+import { useSpring, animated } from '@react-spring/three';
+import { useEffect, useState, useContext } from "react";
+import { SettingsContext } from "../SettingsContext";
 
 const AnimatedText3D = animated(Text3D);
 
+const delay = 500;
+const timeOff = 400;
 
 function Intro() {
-  const [springs, api] = useSpring(() => (
+  const { timerIntroInMs } = useContext(SettingsContext);
+  const springs = useSpring(
       {
-        from: { size: 40},
+        from: { opacity: 0, z: -50 },
+        to: [
+          { opacity: 1, z: 0 },
+          { opacity: 0, z: 50 }
+        ],
+        config: {
+          easing: easings.easeInOutSine,
+          duration: (timerIntroInMs/2) - delay - timeOff, // timerIntroMs/2 because Two changes in to:[array]
+        },
+        delay: delay,
       }
-    )
   );
 
-  useEffect(() => {
-    api.start(
-      {
-        to: {size: 5},
-        config: {
-          duration: 4000
-        }
-      }
-    );
-  }, [])
-
 	return (
-    <Center>
+     <Center>
       <AnimatedText3D
-        size={springs.size}
+        position-z={springs.z}
+        size={40}
         letterSpacing={-0.07}
         font="/Roinert Squared_Italic.json"
         curveSegments={32}
@@ -40,9 +44,15 @@ function Intro() {
         visible={true}
       >
         Floating pixels
-        <meshStandardMaterial color={"orange"} />
+        <animated.meshStandardMaterial transparent={true} opacity={springs.opacity}>
+          <GradientTexture
+            stops={[0, 1]} // As many stops as you want
+            colors={['aquamarine', 'hotpink']} // Colors need to match the number of stops
+            size={1024} // Size is optional, default = 1024
+          />
+        </animated.meshStandardMaterial>
       </AnimatedText3D>
-    </Center>
+     </Center>
    	);               
 }
 

@@ -1,7 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import InputFileWithPreview from "./InputFileWithPreview";
 import Range from ".//Range";
 import Select from "./Select";
+import viteLogo from '/vite.svg';
 import { resizeImage, getAverageBackground } from "../utils";
 
 import { SettingsContext } from "../SettingsContext";
@@ -19,7 +20,8 @@ function Form() {
     fbmAmplitude, setFbmAmplitude,
     backgroundColor, setBackgroundColor,
     luminance, setLuminance,
-    firstRender, setFirstRender
+    firstRender, setFirstRender,
+    timerIntroInMs
   } = useContext(SettingsContext);
   const [collapse, setCollapse] = useState<boolean>(false);
 
@@ -36,6 +38,22 @@ function Form() {
 
     setFirstRender(false);
   }
+  // in case of user does nothing during the timerIntroInMs first second
+  useEffect(() => {
+    setTimeout(() => {
+      startDefaultImage();
+    }, timerIntroInMs);
+
+  }, []);
+
+  function startDefaultImage() {
+    let image = new Image();
+    image.onload = () => {
+      uploadImage(image);  
+    }
+    image.src = viteLogo;
+  }
+
 
   return (
     <div className="card bg-base-300 text-white gap-2" style={{padding: "0.75rem"}}>
