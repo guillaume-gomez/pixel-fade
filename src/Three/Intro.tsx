@@ -31,7 +31,7 @@ function Intro() {
      <Center>
       <AnimatedText3D
         position-z={springs.z}
-        size={40}
+        size={22}
         letterSpacing={-0.07}
         font="/Roinert Squared_Italic.json"
         curveSegments={32}
@@ -43,7 +43,7 @@ function Intro() {
         letterSpacing={-0.06}
         visible={true}
       >
-        Floating pixels
+        Particle Pixel Ballet
         <animated.meshStandardMaterial transparent={true} opacity={springs.opacity}>
           <GradientTexture
             stops={[0, 1]} // As many stops as you want
