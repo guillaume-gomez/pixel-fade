@@ -17,11 +17,11 @@ function Title() {
 
 	return (
 		<animated.div
-        className="lg:absolute bottom-10  z-10 text-center"
+        className="lg:absolute bottom-10 z-10 text-center"
         style={springs}
       >
-         <h1 className="text-5xl">Particle Pixel Ballet</h1>
-         <span className="text-3xl"> By Guillaume Gomez</span>
+         <h1 className="lg:text-5xl md:text-2xl">Particle Pixel Ballet</h1>
+         <span className="lg:text-3xl md:text-xl"> By Guillaume Gomez</span>
       </animated.div>
 	)
 }
