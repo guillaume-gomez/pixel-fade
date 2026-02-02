@@ -10,6 +10,8 @@ const AnimatedText3D = animated(Text3D);
 const delay = 500;
 const timeOff = 400;
 
+const widthLaptop = 1790;
+
 function Intro() {
   const { timerIntroInMs } = useContext(SettingsContext);
   const springs = useSpring(
@@ -27,11 +29,13 @@ function Intro() {
       }
   );
 
+  const sizeRatio = document.body.clientWidth / widthLaptop;
+
 	return (
      <Center>
       <AnimatedText3D
         position-z={springs.z}
-        size={22}
+        size={23 * sizeRatio }
         letterSpacing={-0.07}
         font="/Roinert Squared_Italic.json"
         curveSegments={32}
@@ -43,7 +47,7 @@ function Intro() {
         letterSpacing={-0.06}
         visible={true}
       >
-        Particle Pixel Ballet
+        Particle Pixel BalleT
         <animated.meshStandardMaterial transparent={true} opacity={springs.opacity}>
           <GradientTexture
             stops={[0, 1]} // As many stops as you want
