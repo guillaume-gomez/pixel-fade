@@ -28,7 +28,7 @@ function ThreejsRenderer({
   const {
     width,
     height,
-    backgroundColor
+    backgroundColor,
   } = useContext(SettingsContext);
 
   const meshRef = useRef<Mesh|null>(null);
@@ -37,6 +37,10 @@ function ThreejsRenderer({
   const [chromaticOffset, setChromaticOffset] = useState<number>(0.0025);
 
   useEffect(() => {
+    if(!base64Texture) {
+      return;
+    }
+
     if(!cameraControllerRef.current) {
       // try in 4000 sec
       setTimeout(() => {
@@ -85,7 +89,7 @@ function ThreejsRenderer({
         className="hover:cursor-grabbing w-full h-full rounded-xl"
       >
         <Canvas
-          camera={{ position: [0,0, 10], fov: 75, far: 500 }}
+          camera={{ position: [0,0, 250], fov: 75, far: 500 }}
           dpr={window.devicePixelRatio}
           shadows
         >
