@@ -40,14 +40,10 @@ function PixelFade({ base64Texture = imageBase64, width = 500, height = 500 }: P
           roughnessMap={roughnessMap}
           aoMap={aoMap}
       />*/}
-
-
       <meshStandardMaterial
-
           attach="material-4"
           color="#FFFFFF"
           map={texture}
-          
       />
     </mesh>
     )
