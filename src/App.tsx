@@ -3,11 +3,13 @@ import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 import Form from "./components/Form";
+import Title from "./components/Title";
 import { resizeImage, getAverageBackground } from "./utils";
 import ThreejsRenderer from "./Three/ThreejsRenderer";
 import { type GeometryType } from "./Three/InstancedBufferGeometry";
 
 import { SettingsContext } from "./SettingsContext";
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,33 +21,34 @@ function App() {
     fbmFrequency,
     fbmSpeed,
     fbmAmplitude,
-    luminance
+    luminance,
+    timerIntroInMs
   } = useContext(SettingsContext);
 
+
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen sm:px-4 sm:d-flex sm:flex-column ">
+      <Title />
+
+      <div className="w-full h-full">
+        <ThreejsRenderer
+          base64Texture={image?.src}
+          config={{
+            geometryType,
+            size,
+            fbmFrequency,
+            fbmSpeed,
+            fbmAmplitude,
+            luminance,
+            optimised: true
+          }}
+        />
+      </div>
+
       <div className="lg:absolute md:static lg:top-8 lg:left-8 lg:max-w-xs md:max-w-full md:w-full z-10">
         <Form />
       </div>
-
-      <div className="w-full h-full">
-        {
-          image?.src && (
-            <ThreejsRenderer
-              base64Texture={image?.src}
-              config={{
-                geometryType,
-                size,
-                fbmFrequency,
-                fbmSpeed,
-                fbmAmplitude,
-                luminance,
-                optimised: true
-              }}
-            />
-          )
-        }
-      </div>
+      
       <div className="card">
          <div>
         <a href="https://vite.dev" target="_blank">
