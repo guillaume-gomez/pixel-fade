@@ -92,6 +92,7 @@ function ThreejsRenderer({
           camera={{ position: [0,0, 250], fov: 75, far: 500 }}
           dpr={window.devicePixelRatio}
           shadows
+          id="three-js-renderer"
         >
           { import.meta.env.MODE === "development" ? <Stats/> : <></> }
           <ambientLight intensity={1.5} />

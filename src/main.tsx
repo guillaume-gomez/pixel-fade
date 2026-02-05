@@ -9,8 +9,8 @@ import Scene from "./Three/FBO/Scene";
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <SettingsContextWrapper>
-      {/*<App />*/}
-      <Scene />
+      <App />
+      {/*<Scene />*/}
     </SettingsContextWrapper>
   </StrictMode>,
 )
