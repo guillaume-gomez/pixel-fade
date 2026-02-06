@@ -27,7 +27,7 @@ function Range({label, onChange, value, min, max, step = 1, float = false} : Ran
             }
           }
         />
-        <legend className="fieldset-legend badge badge-secondary">{value}</legend>
+        <legend className="fieldset-legend badge badge-secondary border border-primary">{value}</legend>
       </div>
     </div>
   );
