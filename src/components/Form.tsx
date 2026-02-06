@@ -88,8 +88,11 @@ function Form() {
 
   return (
     <div className="card bg-base-300 text-white gap-2 shadow-lg glass bg-transparent" style={{padding: "0.75rem"}}>
-      <div className="card-header flex justify-between items-center bg-base-100 rounded">
-        <span>Settings</span>
+      <div
+        className="card-header flex justify-between items-center bg-base-100 rounded hover:cursor-pointer"
+        onClick={() => setCollapse(!collapse)}
+      >
+        <span className="px-2">Settings</span>
         <button
           className="btn btn-ghost"
           onClick={() => setCollapse(!collapse)}>
