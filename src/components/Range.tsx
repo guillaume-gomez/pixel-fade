@@ -20,7 +20,7 @@ function Range({label, onChange, value, min, max, step = 1, float = false} : Ran
           min={min}
           max={max}
           type="range"
-          className="range range-primary w-full"
+          className="range range-xs range-primary w-full"
           onChange={(e) => {
               const value = float ? parseFloat(e.target.value) : parseInt(e.target.value);
               onChange(value);

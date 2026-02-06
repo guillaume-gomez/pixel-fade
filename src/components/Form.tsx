@@ -25,11 +25,20 @@ function Form() {
   } = useContext(SettingsContext);
   const [collapse, setCollapse] = useState<boolean>(false);
 
-  const springs = useSpring({
+  const springsForm = useSpring({
     transformOrigin: "top",
     height: "auto",
     maxHeight: collapse ? 0 : "inherit",
     transform: collapse ? "scaleY(0)": "scaleY(1)",
+    opacity: collapse ? 0 : 1,
+  });
+
+  const springsIcon = useSpring({
+    stroke: "white",
+    strokeWidth: "2px",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    d: collapse ? "M 2,4 L 8,12 L 14,4" : "M 2,14 L 8,4 L 14,14"
   });
 
   function uploadImage(newImage: HTMLImageElement) {
@@ -43,8 +52,11 @@ function Form() {
     setWidth(expectedWidth);
     setHeight(expectedHeight);
 
+    scrollIntoCanvas();
+
     setFirstRender(false);
   }
+
   // in case of user does nothing during the timerIntroInMs first second
   useEffect(() => {
     setTimeout(() => {
@@ -61,82 +73,100 @@ function Form() {
     image.src = viteLogo;
   }
 
+  function scrollIntoCanvas() {
+    const element = document.getElementById("three-js-renderer");
+    if(!element) {
+      return;
+    }
+
+    element.scrollIntoView({ behavior: "smooth" });
+  }
+
+  if(firstRender) {
+    return <></>;
+  }
 
   return (
-    <div className="card bg-base-300 text-white gap-2" style={{padding: "0.75rem"}}>
-      <div className="card-header flex justify-between bg-base-100 rounded">
+    <div className="card bg-base-300 text-white gap-2 shadow-lg glass bg-transparent" style={{padding: "0.75rem"}}>
+      <div className="card-header flex justify-between items-center bg-base-100 rounded">
         <span>Settings</span>
-        <button onClick={() => setCollapse(!collapse)}> X </button>
+        <button
+          className="btn btn-ghost"
+          onClick={() => setCollapse(!collapse)}>
+            <svg viewBox="0 0 16 16" width={20} height={20}>
+              <animated.path
+                style={springsIcon}
+                d={springsIcon.d}
+              />
+            </svg>
+        </button>
       </div> 
-        {!collapse && 
-        <animated.div style={springs} className="card-body p-0">
-          <InputFileWithPreview 
-            onChange={uploadImage}
-            value={image}
-          />
-          { !firstRender && 
-            <>
-              <Select
-                label="geometry type"
-                value={geometryType}
-                onChange={(newValue) => setGeometryType(newValue)}
-                options={
-                  [
-                    {value: "rounded", label: "Rounded"},
-                    {value: "rectangle", label: "Rectangle"},
-                    {value: "circle", label: "Circle"}
-                  ]
-                }
-              />
-              <Range 
-                label="Size"
-                value={size}
-                onChange={(value) => setSize(value)}
-                min={0.1}
-                max={30}
-                step={0.1}
-                float={true}
-              /> 
-              <Range 
-                label="Luminance"
-                value={luminance}
-                onChange={(value) => setLuminance(value)}
-                min={1.0}
-                max={4.0}
-                step={0.1}
-                float={true}
-              /> 
-              <Range 
-                label="fbmFrequency"
-                value={fbmFrequency}
-                onChange={(value) => setFbmFrequency(value)}
-                min={0.1}
-                max={100.0}
-                step={0.1}
-                float={true}
-              /> 
-              <Range 
-                label="fbmSpeed"
-                value={fbmSpeed}
-                onChange={(value) => setFbmSpeed(value)}
-                min={0.1}
-                max={100.0}
-                step={0.1}
-                float={true}
-              /> 
-              <Range 
-                label="fbmAmplitude"
-                value={fbmAmplitude}
-                onChange={(value) => setFbmAmplitude(value)}
-                min={0.1}
-                max={10.0}
-                step={0.1}
-                float={true}
-              />
-            </>
-          } 
-          </animated.div>
-        }
+       
+      <animated.div style={springsForm} className="card-body p-0">
+        <InputFileWithPreview 
+          onChange={uploadImage}
+          value={image}
+        />
+     
+        <Select
+          label="geometry type"
+          value={geometryType}
+          onChange={(newValue) => setGeometryType(newValue)}
+          options={
+            [
+              {value: "rounded", label: "Rounded"},
+              {value: "rectangle", label: "Rectangle"},
+              {value: "circle", label: "Circle"}
+            ]
+          }
+        />
+        <Range 
+          label="Size"
+          value={size}
+          onChange={(value) => setSize(value)}
+          min={0.1}
+          max={30}
+          step={0.1}
+          float={true}
+        /> 
+        <Range 
+          label="Luminance"
+          value={luminance}
+          onChange={(value) => setLuminance(value)}
+          min={1.0}
+          max={4.0}
+          step={0.1}
+          float={true}
+        /> 
+        <Range 
+          label="fbmFrequency"
+          value={fbmFrequency}
+          onChange={(value) => setFbmFrequency(value)}
+          min={0.1}
+          max={100.0}
+          step={0.1}
+          float={true}
+        /> 
+        <Range 
+          label="fbmSpeed"
+          value={fbmSpeed}
+          onChange={(value) => setFbmSpeed(value)}
+          min={0.1}
+          max={100.0}
+          step={0.1}
+          float={true}
+        /> 
+        <Range 
+          label="fbmAmplitude"
+          value={fbmAmplitude}
+          onChange={(value) => setFbmAmplitude(value)}
+          min={0.1}
+          max={10.0}
+          step={0.1}
+          float={true}
+        />
+          
+      </animated.div>      
     </div>
   );
 }

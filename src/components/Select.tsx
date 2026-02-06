@@ -14,7 +14,7 @@ function Select({ label, value, onChange, options } : SelectProps) {
     <select
       onChange={(e) =>onChange(e.target.value)}
       value={value}
-      className="select select-bordered select-sm"
+      className="select select-xs select-bordered select-sm"
     >
       <option className="bg-neutral" disabled>{label}</option>
       {
