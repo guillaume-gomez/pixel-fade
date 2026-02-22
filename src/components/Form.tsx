@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import InputFileWithPreview from "./InputFileWithPreview";
 import Range from ".//Range";
 import Select from "./Select";
-import viteLogo from '/vite.svg';
+import sample from '/spectrum-colors-arranged-by-chance-III.jpg';
 import { resizeImage, getAverageBackground } from "../utils";
 import { useSpring, animated } from '@react-spring/web';
 import { SettingsContext } from "../SettingsContext";
@@ -70,7 +70,7 @@ function Form() {
     image.onload = () => {
       uploadImage(image);  
     }
-    image.src = viteLogo;
+    image.src = sample;
   }
 
   function scrollIntoCanvas() {
