@@ -43,14 +43,25 @@ function Form() {
 
   function uploadImage(newImage: HTMLImageElement) {
     setBackgroundColor(getAverageBackground(newImage));
-    const expectedWidth = 200;
-    const expectedHeight = Math.floor(newImage.height/newImage.width * 200);
+
+    // if width is wider limit the width or vise versa
+    const expectedWidth = newImage.width > newImage.height ? 
+      200 :
+      Math.floor(newImage.width/newImage.height * 200)
+    ;
+    // same computation as below but for the height
+    const expectedHeight = newImage.width > newImage.height ?
+      Math.floor(newImage.height/newImage.width * 200) :
+      200
+    ;
     
     const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight);
     setImage(resizedImage);
     
     setWidth(expectedWidth);
     setHeight(expectedHeight);
+
+    console.log(expectedWidth, expectedHeight)
 
     scrollIntoCanvas();
 
