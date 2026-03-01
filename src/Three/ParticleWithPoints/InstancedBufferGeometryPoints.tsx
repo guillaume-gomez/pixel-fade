@@ -1,11 +1,9 @@
 import { useMemo } from "react";
 import { useLoader, useFrame, extend } from '@react-three/fiber';
 import {
-    InstancedBufferAttribute,
     Vector2,
     //BoxHelper,
     TextureLoader,
-    BufferGeometry
 } from "three";
 import PixelsFadeMaterialPoint from "./PixelsFadeMaterialPoint";
 
@@ -46,9 +44,6 @@ function InstancedBufferGeometryPoints(
   
   // Builds instanced data for the packing
   const objectData = useMemo(() => {
-      
-      // setup buffer geometry
-      let geometry = new BufferGeometry();
       
       // setup arrays
       let positionsArray = new Float32Array(maxNumberOfInstances * 3);
@@ -99,7 +94,7 @@ function InstancedBufferGeometryPoints(
       		depthWrite={false}
       		uTexture={texture}
           uTextureSize={new Vector2(width, height)}
-          uLuminenceIntensity={config.luminance}
+          uLuminenceIntensity={config.luminence}
           uSize={config.size}
           uFbmAmplitude={config.fbmAmplitude}
           uFbmFrequency={config.fbmFrequency}

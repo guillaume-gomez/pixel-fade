@@ -12,7 +12,7 @@ interface VaranoiMaterialProps {
 	mousePosition: Vector2;
 }
 
-function VaranoiMaterial({width, height, mousePosition}) {
+function VaranoiMaterial({width, height, mousePosition} : VaranoiMaterialProps) {
   const ref = useRef(null);
 
   useFrame((state) => {

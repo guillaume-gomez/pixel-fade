@@ -1,7 +1,6 @@
 import { Effect } from "postprocessing";
 import * as THREE from "three";
-import React, { forwardRef, useMemo } from 'react'
-import { Uniform } from 'three'
+import { forwardRef, useMemo } from 'react'
 import SenaarShader from './SenaarShader';
 
 /**

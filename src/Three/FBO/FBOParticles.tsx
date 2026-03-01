@@ -1,6 +1,6 @@
 import { useFBO } from "@react-three/drei";
 import { useFrame, extend, createPortal, useLoader } from "@react-three/fiber";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import {
   NearestFilter,
   RGBAFormat,

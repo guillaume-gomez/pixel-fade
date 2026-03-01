@@ -26,7 +26,7 @@ export interface Config {
     size: number;
     optimised: boolean;
     geometryType: GeometryType;
-    luminence: number;
+    luminance: number;
 }
 
 interface instancedBufferGeometryProps  {
@@ -122,7 +122,7 @@ function instancedBufferGeometry(
             <pixelsFadeMaterial
                 uTexture={texture}
                 uTextureSize={new Vector2(width, height)}
-                uLuminenceIntensity={config.luminance}
+                uLuminanceIntensity={config.luminance}
                 uSize={config.size}
                 uFbmAmplitude={config.fbmAmplitude}
                 uFbmFrequency={config.fbmFrequency}

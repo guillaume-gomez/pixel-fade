@@ -1,22 +1,19 @@
-import { OrbitControls, useFBO, RoundedBox } from "@react-three/drei";
+import { OrbitControls, useFBO, Box } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useRef, useState, Suspense } from "react";
 import { 
   GizmoHelper,
   GizmoViewport,
-  Stage,
   Stats,
   CameraControls,
-  useHelper,
   Grid,
 } from '@react-three/drei';
 import { Color, Vector2 } from "three";
 import { EffectComposer, Vignette, ChromaticAberration, Bloom, Grid as GridP } from '@react-three/postprocessing';
-import { BlendFunction } from 'postprocessing';
 import SenaarEffect from "../Effect/Senaar/SeenarShaderEffect";
 import Range from "../../components/Range";
 import FBOParticles from "./FBOParticles";
-import FallbackLoader from "../FallbackLoader";
+import FallbackLoader from "../FallBackLoader";
 import VaranoiMaterial from "../Material/VaranoiMaterial";
 
 const SceneTest = () => {
@@ -36,16 +33,15 @@ const SceneTest = () => {
       step={0.1}
       float={true}
     />
-    <Canvas camera={{ position: [0, 0, 500],  far: 1000 }}>
+    <Canvas camera={{ position: [0, 0, 500], min: 0.1, far: 1000 }}>
       <ambientLight intensity={0.5} />
-      <color attach="background" args={["#0000FF"]} />
+      <color attach="background" args={["#0F0FF0"]} />
       <Stats/>
       <color attach="background" args={["#0007A6"]} />
       <Suspense fallback={<FallbackLoader/>}>
         
           <FBOParticles />
-          <RoundedBox
-            
+          <Box
             args={[1, 1, 1]} // Width, height, depth. Default is [1, 1, 1]
             radius={0.05} // Radius of the rounded corners. Default is 0.05
             steps={1} // Extrusion steps. Default is 1
@@ -59,7 +55,7 @@ const SceneTest = () => {
               height={200}
               mousePosition={new Vector2(1,1)}
             />
-          </RoundedBox>
+          </Box>
           <Grid args={[1000, 1000]} position={[0,0,0]} cellColor='green' />
         
         <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
@@ -72,13 +68,13 @@ const SceneTest = () => {
             blendFunction={BlendFunction.NORMAL} // blend mode
           />*/}
           <SenaarEffect
-          param={{
+            param={{
               color: new Color(0xFF0000),
               enableStripe: true,
               stripeDirection: -2.0,
               gradiantCurve: 0.5
             }}
-        />
+          />
             {/*<Bloom mipmapBlur luminanceThreshold={1.0} />*/}
             {/*<ChromaticAberration
               blendFunction={BlendFunction.NORMAL} // blend mode
@@ -87,6 +83,7 @@ const SceneTest = () => {
         </EffectComposer>
       </Suspense>
       <CameraControls ref={cameraRef} />
+      <OrbitControls />
       <GizmoHelper
         alignment="bottom-right"
         margin={[80, 80]}

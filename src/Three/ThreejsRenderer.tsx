@@ -2,15 +2,14 @@ import { useRef, Suspense, useEffect, useState, useContext } from 'react';
 import { SettingsContext } from "../SettingsContext";
 
 import { Canvas } from '@react-three/fiber';
-//import PixelFade from "./PixelFade";
-import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls, Text3D, Center } from '@react-three/drei';
+import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls } from '@react-three/drei';
 import { type Mesh} from "three";
 import FallBackLoader from "./FallBackLoader";
-import { EffectComposer, Vignette, ChromaticAberration, Bloom } from '@react-three/postprocessing';
+import { EffectComposer, Vignette, Bloom } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 
 import InstanceMesh, { type Config } from "./ParticleWithBufferGeometry/InstancedBufferGeometry";
-import InstancedBufferGeometryPoints from "./ParticleWithPoints/InstancedBufferGeometryPoints";
+//import InstancedBufferGeometryPoints from "./ParticleWithPoints/InstancedBufferGeometryPoints";
 import Intro from "./Intro";
 
 const { /*BASE_URL,*/ MODE } = import.meta.env;
@@ -28,13 +27,13 @@ function ThreejsRenderer({
   const {
     width,
     height,
-    backgroundColor,
+    backgroundColor
   } = useContext(SettingsContext);
 
   const meshRef = useRef<Mesh|null>(null);
   const cameraControllerRef = useRef<CameraControls>(null);
   const [vignetteDarkness, setVignetteDarkness] = useState<number>(1.5);
-  const [chromaticOffset, setChromaticOffset] = useState<number>(0.0025);
+  const [_chromaticOffset, setChromaticOffset] = useState<number>(0.0025);
 
   useEffect(() => {
     if(!base64Texture) {

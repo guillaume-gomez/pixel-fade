@@ -1,8 +1,7 @@
-import { Text3D, Center, GradientTexture, GradientType } from '@react-three/drei';
-import { MeshBasicMaterial } from "three";
+import { Text3D, Center, GradientTexture } from '@react-three/drei';
 import { easings } from '@react-spring/web';
 import { useSpring, animated } from '@react-spring/three';
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import { SettingsContext } from "../SettingsContext";
 
 const AnimatedText3D = animated(Text3D);

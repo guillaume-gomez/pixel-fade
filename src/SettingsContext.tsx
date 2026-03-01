@@ -1,7 +1,30 @@
 import { createContext, useContext, useState, ReacNode } from 'react';
 import { type GeometryType } from "./Three/InstancedBufferGeometry";
 
-export const SettingsContext = createContext(null);
+export interface SettingsContextParams {
+  image: HTMLImageElement;
+  width: number;
+  height: number;
+  geometryType: GeometryType;  
+  fbmFrequency: number;
+  fbmSpeed: number;
+  fbmAmplitude: number;
+  backgroundColor: string;
+  luminance: number;
+  firstRender: boolean;
+  setImage: (newImage: HTMLImageElement) => void;
+  setWidth: (newWidth: number) => void;
+  setHeight: (newHeight: number) => void;
+  setGeometryType: (geometryType: GeometryType) => void;
+  setFbmFrequency: (fbmFrequency: number)  => void;
+  setFbmSpeed: (fbmFrequency: number)  => void;
+  setFbmAmplitude: (fbmFrequency: number)  => void;
+  setBackgroundColor: (backgroundColor: string) => void;
+  setLuminance: (luminance: number) => void;
+  setFirstRender: (render: boolean) => void;
+  timerIntroInMs: number;
+}
+export const SettingsContext = createContext<SettingsContextParams>(null);
 
 interface Props {
   children: ReacNode;

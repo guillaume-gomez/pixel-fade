@@ -6,7 +6,7 @@ const PixelsFadeMaterial = shaderMaterial(
   { 
     uTexture: null,
     uTextureSize: new Vector2(),
-    uLuminenceIntensity:1.0,
+    uLuminanceIntensity:1.0,
     uTime: 0.0,
     uRandom: 1.0,
     uDepth: 2.0,
@@ -136,7 +136,7 @@ const PixelsFadeMaterial = shaderMaterial(
     precision highp float;
 
         uniform sampler2D uTexture;
-        uniform float uLuminenceIntensity;
+        uniform float uLuminanceIntensity;
         
         varying vec2 vUv;
         varying vec2 vPUv;
@@ -150,7 +150,7 @@ const PixelsFadeMaterial = shaderMaterial(
 
             // pixel color
             //vec3 colA = vec3(0.5, 0.0, 0.0);
-            vec3 colA = texture2D(uTexture,puv).rgb * uLuminenceIntensity;
+            vec3 colA = texture2D(uTexture,puv).rgb * uLuminanceIntensity;
 
             float t = 1.0;
 

@@ -1,4 +1,4 @@
-import { DataTexture, ShaderMaterial, RGBAFormat, FloatType, MathUtils, Vector2 } from "three";
+import { DataTexture, ShaderMaterial, RGBAFormat, FloatType } from "three";
 
 const vertexShader = /*glsl*/
 `varying vec2 vUv;
