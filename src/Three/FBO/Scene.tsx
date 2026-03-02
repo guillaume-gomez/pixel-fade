@@ -1,4 +1,4 @@
-import { OrbitControls, useFBO, Box } from "@react-three/drei";
+import { OrbitControls, Box } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useRef, useState, Suspense } from "react";
 import { 
@@ -9,7 +9,7 @@ import {
   Grid,
 } from '@react-three/drei';
 import { Color, Vector2 } from "three";
-import { EffectComposer, Vignette, ChromaticAberration, Bloom, Grid as GridP } from '@react-three/postprocessing';
+import { EffectComposer } from '@react-three/postprocessing';
 import SenaarEffect from "../Effect/Senaar/SeenarShaderEffect";
 import Range from "../../components/Range";
 import FBOParticles from "./FBOParticles";
@@ -33,7 +33,7 @@ const SceneTest = () => {
       step={0.1}
       float={true}
     />
-    <Canvas camera={{ position: [0, 0, 500], min: 0.1, far: 1000 }}>
+    <Canvas camera={{ position: [0, 0, 500], near: 0.1, far: 1000 }}>
       <ambientLight intensity={0.5} />
       <color attach="background" args={["#0F0FF0"]} />
       <Stats/>

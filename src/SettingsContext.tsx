@@ -1,11 +1,12 @@
-import { createContext, useContext, useState, ReacNode } from 'react';
-import { type GeometryType } from "./Three/InstancedBufferGeometry";
+import { createContext, useState } from 'react';
+import { type GeometryType } from "./Three/ParticleWithBufferGeometry/InstancedBufferGeometry.tsx";
 
 export interface SettingsContextParams {
   image: HTMLImageElement;
   width: number;
   height: number;
-  geometryType: GeometryType;  
+  geometryType: GeometryType;
+  size: number;
   fbmFrequency: number;
   fbmSpeed: number;
   fbmAmplitude: number;
@@ -15,6 +16,7 @@ export interface SettingsContextParams {
   setImage: (newImage: HTMLImageElement) => void;
   setWidth: (newWidth: number) => void;
   setHeight: (newHeight: number) => void;
+  setSize: (size: number) => void;
   setGeometryType: (geometryType: GeometryType) => void;
   setFbmFrequency: (fbmFrequency: number)  => void;
   setFbmSpeed: (fbmFrequency: number)  => void;

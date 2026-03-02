@@ -34,7 +34,7 @@ void main() {
 }
 `;
 
-const getPositionStart = (width, height) => {
+const getPositionStart = (width: number, height: number) => {
   // we need to create a vec4 since we're passing the positions to the fragment shader
   // data textures need to have 4 components, R, G, B, and A
   const length = width * height * 4 
@@ -52,7 +52,7 @@ const getPositionStart = (width, height) => {
   return data;
 }
 
-const getPositionEnd = (width, height) => {
+const getPositionEnd = (width: number, height: number) => {
   var len = width * height * 4;
   var data = new Float32Array(len);
 
@@ -68,7 +68,7 @@ const getPositionEnd = (width, height) => {
 };
 
 class SimulationMaterial extends ShaderMaterial {
-  constructor(size) {
+  constructor(size: number) {
     const width = size;
     const height = size;
     
