@@ -35,7 +35,6 @@ function Intro() {
       <AnimatedText3D
         position-z={springs.z}
         size={23 * sizeRatio }
-        letterSpacing={-0.07}
         font="/Roinert Squared_Italic.json"
         curveSegments={32}
         bevelEnabled
