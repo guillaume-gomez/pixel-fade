@@ -46,8 +46,8 @@ function InstancedBufferGeometryPoints(
   const objectData = useMemo(() => {
       
       // setup arrays
-      let positionsArray = new Float32Array(maxNumberOfInstances * 3);
-      let speedArray = new Float32Array(maxNumberOfInstances);
+      const positionsArray = new Float32Array(maxNumberOfInstances * 3);
+      const speedArray = new Float32Array(maxNumberOfInstances);
       
       // Build per-instance attributes. 
       let count = 0;

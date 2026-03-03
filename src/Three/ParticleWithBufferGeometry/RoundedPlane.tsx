@@ -13,19 +13,19 @@ export default function RoundedPlane(w: number, h: number, r: number, s: number 
     const vl = r / h;           // v low
     const vh = ( h - r ) / h;   // v high   
     
-    let positions = [
+    const positions = [
     
          wi, hi, 0, -wi, hi, 0, -wi, -hi, 0, wi, -hi, 0
          
     ];
     
-    let uvs = [
+    const uvs = [
         
         ur, vh, ul, vh, ul, vl, ur, vl
         
     ];
     
-    let n = [
+    const n = [
         
         3 * ( s + 1 ) + 3,  3 * ( s + 1 ) + 4,  s + 4,  s + 5,
         2 * ( s + 1 ) + 4,  2,  1,  2 * ( s + 1 ) + 3,
@@ -33,7 +33,7 @@ export default function RoundedPlane(w: number, h: number, r: number, s: number 
         
     ];
     
-    let indices = [
+    const indices = [
         
         n[0], n[1], n[2],  n[0], n[2],  n[3],
         n[4], n[5], n[6],  n[4], n[6],  n[7],

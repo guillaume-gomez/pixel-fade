@@ -27,7 +27,6 @@ const scene = new Scene();
 const camera = new OrthographicCamera(-1, 1, 1, -1, 1 / Math.pow(2, 53), 1);
 
 const FBOParticles = ({ red, widthTexture = 450, heighTexture = 650 }) => {
-  const fboRef = useRef(null);
   const [texture] = useLoader(TextureLoader, [imageBase64]);
 
   const size = 128;
@@ -61,7 +60,7 @@ const FBOParticles = ({ red, widthTexture = 450, heighTexture = 650 }) => {
     const length = width * height;
     const particles = new Float32Array(length * 3);
     for (let i = 0; i < length; i++) {
-      let i3 = i * 3;
+      const i3 = i * 3;
       particles[i3 + 0] = (i % width) / width;
       particles[i3 + 1] = i / width / height;
     }

@@ -53,8 +53,8 @@ const getPositionStart = (width: number, height: number) => {
 }
 
 const getPositionEnd = (width: number, height: number) => {
-  var len = width * height * 4;
-  var data = new Float32Array(len);
+  const len = width * height * 4;
+  const data = new Float32Array(len);
 
   for (let i = 0; i < data.length; i++) {
     const stride = i * 4;

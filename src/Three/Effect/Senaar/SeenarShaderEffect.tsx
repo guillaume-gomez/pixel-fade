@@ -11,6 +11,8 @@ export interface SenaarEffectOptions {
   resolution?: THREE.Vector2;
   color: THREE.Color;
   enableStripe: boolean;
+  stripeDirection: number;
+  gradiantCurve: number;
 }
 
 /**
@@ -87,9 +89,9 @@ class SenaarEffect extends Effect {
    * @param frameBufferType - The type of the main frame buffers
    */
   initialize(
-    renderer: THREE.WebGLRenderer,
-    alpha: boolean,
-    frameBufferType: number
+    _renderer: THREE.WebGLRenderer,
+    _alpha: boolean,
+    _frameBufferType: number
   ): void {
     // No special initialization required for this effect
   }

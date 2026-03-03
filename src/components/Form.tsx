@@ -11,14 +11,14 @@ import { SettingsContext } from "../SettingsContext";
 function Form() {
   const {
     image, setImage,
-    width, setWidth,
-    height, setHeight,
+    setWidth,
+    setHeight,
     geometryType, setGeometryType,
     size, setSize,
     fbmFrequency, setFbmFrequency,
     fbmSpeed, setFbmSpeed,
     fbmAmplitude, setFbmAmplitude,
-    backgroundColor, setBackgroundColor,
+    setBackgroundColor,
     luminance, setLuminance,
     firstRender, setFirstRender,
     timerIntroInMs
@@ -41,6 +41,22 @@ function Form() {
     d: collapse ? "M 2,4 L 8,12 L 14,4" : "M 2,14 L 8,4 L 14,14"
   });
 
+  useEffect(() => {
+    setTimeout(() => {
+      startDefaultImage();
+    }, timerIntroInMs);
+
+  }, []);
+
+  function scrollIntoCanvas() {
+    const element = document.getElementById("three-js-renderer");
+    if(!element) {
+      return;
+    }
+
+    element.scrollIntoView({ behavior: "smooth" });
+  }
+
   function uploadImage(newImage: HTMLImageElement) {
     setBackgroundColor(getAverageBackground(newImage));
 
@@ -61,36 +77,17 @@ function Form() {
     setWidth(expectedWidth);
     setHeight(expectedHeight);
 
-    console.log(expectedWidth, expectedHeight)
-
     scrollIntoCanvas();
 
     setFirstRender(false);
   }
 
-  // in case of user does nothing during the timerIntroInMs first second
-  useEffect(() => {
-    setTimeout(() => {
-      startDefaultImage();
-    }, timerIntroInMs);
-
-  }, []);
-
   function startDefaultImage() {
-    let image = new Image();
+    const image = new Image();
     image.onload = () => {
       uploadImage(image);  
     }
     image.src = sample;
-  }
-
-  function scrollIntoCanvas() {
-    const element = document.getElementById("three-js-renderer");
-    if(!element) {
-      return;
-    }
-
-    element.scrollIntoView({ behavior: "smooth" });
   }
 
   if(firstRender) {

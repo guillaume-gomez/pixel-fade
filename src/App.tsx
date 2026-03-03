@@ -14,8 +14,7 @@ function App() {
     fbmFrequency,
     fbmSpeed,
     fbmAmplitude,
-    luminance,
-    timerIntroInMs
+    luminance
   } = useContext(SettingsContext);
 
 

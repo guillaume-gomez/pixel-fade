@@ -1,11 +1,11 @@
 interface Option {
-  value: any;
+  value: string;
   label: string
 }
 interface SelectProps {
   label: string;
-  value: any;
-  onChange: (value: any) => void;
+  value: string;
+  onChange: (value: string) => void;
   options: Option[];
 }
 

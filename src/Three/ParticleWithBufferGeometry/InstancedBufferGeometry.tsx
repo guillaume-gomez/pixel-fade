@@ -54,13 +54,13 @@ function instancedBufferGeometry(
     const objectData = useMemo(() => {
         
         // setup buffer geometry
-        let geometry = pickGeometry(config.geometryType)
+        const geometry = pickGeometry(config.geometryType)
         
         // setup arrays
-        let positionsArray = new Float32Array(maxNumberOfInstances * 3);
-        let anglesArray = new Float32Array(maxNumberOfInstances);
+        const positionsArray = new Float32Array(maxNumberOfInstances * 3);
+        const anglesArray = new Float32Array(maxNumberOfInstances);
         // used for optimisation
-        let indicesArray = new Uint16Array(maxNumberOfInstances); 
+        const indicesArray = new Uint16Array(maxNumberOfInstances); 
 
         // Build per-instance attributes. 
         let count = 0
