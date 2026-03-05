@@ -1,11 +1,12 @@
 import { useContext, useState, useEffect } from "react";
 import InputFileWithPreview from "./InputFileWithPreview";
-import Range from ".//Range";
+import Range from "./Range";
 import Select from "./Select";
 import sample from '/spectrum-colors-arranged-by-chance-III.jpg';
 import { resizeImage, getAverageBackground } from "../utils";
 import { useSpring, animated } from '@react-spring/web';
 import { SettingsContext } from "../SettingsContext";
+import { type GeometryType } from "./Three/ParticleWithBufferGeometry/InstancedBufferGeometry.tsx";
 
 
 function Form() {
@@ -15,6 +16,7 @@ function Form() {
     setHeight,
     geometryType, setGeometryType,
     size, setSize,
+    spacing, setSpacing,
     fbmFrequency, setFbmFrequency,
     fbmSpeed, setFbmSpeed,
     fbmAmplitude, setFbmAmplitude,
@@ -122,7 +124,7 @@ function Form() {
         <Select
           label="geometry type"
           value={geometryType}
-          onChange={(newValue) => setGeometryType(newValue)}
+          onChange={(newValue) => setGeometryType(newValue as GeometryType)}
           options={
             [
               {value: "rounded", label: "Rounded"},
@@ -147,6 +149,15 @@ function Form() {
           min={1.0}
           max={4.0}
           step={0.1}
+          float={true}
+        /> 
+        <Range 
+          label="Spacing"
+          value={spacing}
+          onChange={(value) => setSpacing(value)}
+          min={1.0}
+          max={5.0}
+          step={0.01}
           float={true}
         /> 
         <Range 

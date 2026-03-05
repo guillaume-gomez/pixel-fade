@@ -62,7 +62,7 @@ class SenaarEffect extends Effect {
    * @param deltaTime - Time elapsed since the last frame
    */
   update(
-    renderer: THREE.WebGLRenderer,
+    _renderer: THREE.WebGLRenderer,
     inputBuffer: THREE.WebGLRenderTarget,
     deltaTime: number
   ): void {
@@ -99,7 +99,7 @@ class SenaarEffect extends Effect {
   setColorGradiant(color: THREE.Color): void {
     const colorGradiant = this.uniforms.get("colorGradiant");
     if (colorGradiant !== undefined) {
-      colorGradiant.value = size;
+      colorGradiant.value = color;
     }
   }
 
@@ -110,14 +110,14 @@ class SenaarEffect extends Effect {
     }
   }
   
-  setStripeDiection(direction: float): void {
+  setStripeDiection(direction: number): void {
     const stripeDirection = this.uniforms.get("stripeDirection");
     if (stripeDirection !== undefined) {
       stripeDirection.value = direction;
     }
   }
 
-  setGradiantCurve(value: float): void {
+  setGradiantCurve(value: number): void {
     const gradiantCurve = this.uniforms.get("gradiantCurve");
     if (gradiantCurve !== undefined) {
       gradiantCurve.value = value;

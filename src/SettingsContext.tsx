@@ -7,6 +7,7 @@ export interface SettingsContextParams {
   height: number;
   geometryType: GeometryType;
   size: number;
+  spacing: number;
   fbmFrequency: number;
   fbmSpeed: number;
   fbmAmplitude: number;
@@ -23,6 +24,7 @@ export interface SettingsContextParams {
   setFbmAmplitude: (fbmFrequency: number)  => void;
   setBackgroundColor: (backgroundColor: string) => void;
   setLuminance: (luminance: number) => void;
+  setSpacing: (spacing: number) => void;
   setFirstRender: (render: boolean) => void;
   timerIntroInMs: number;
 }
@@ -36,6 +38,7 @@ function SettingsContextWrapper({children}: Props) {
   const [image, setImage] = useState<HTMLImageElement>();
   const [width, setWidth] =  useState<number>(200);
   const [height, setHeight] =  useState<number>(200);
+  const [spacing, setSpacing] = useState<number>(1);
   const [geometryType, setGeometryType] = useState<GeometryType>("rounded");
   const [size, setSize] = useState<number>(1.0);
   const [fbmFrequency, setFbmFrequency] = useState<number>(1.0);
@@ -58,6 +61,7 @@ function SettingsContextWrapper({children}: Props) {
       backgroundColor, setBackgroundColor,
       luminance, setLuminance,
       firstRender, setFirstRender,
+      spacing, setSpacing,
       timerIntroInMs: 8000
     }}>
       {children}

@@ -14,6 +14,7 @@ const PixelsFadeMaterial = shaderMaterial(
     uFbmAmplitude: 10.0,
     uFbmFrequency: 1.0,
     uFbmSpeed: 10.0,
+    uSpacing: 1.0,
 
   },
   // vertex shader
@@ -97,6 +98,7 @@ const PixelsFadeMaterial = shaderMaterial(
     uniform float uRandom;
     uniform float uTime;
     uniform float uSize;
+    uniform float uSpacing;
 
     varying vec2 vUv;
     varying vec2 vPUv;
@@ -105,6 +107,8 @@ const PixelsFadeMaterial = shaderMaterial(
         vUv = uv;
         vec2 puv = iPosition.xy / uTextureSize;
         vPUv = puv;
+
+        vec2 center = vec2(uTextureSize.x/2. * uSpacing, uTextureSize.y/2. * uSpacing);
 
         // scale pixel color
         vec4 colA = texture2D(uTexture, puv);
@@ -118,10 +122,11 @@ const PixelsFadeMaterial = shaderMaterial(
         // curl noise to move tile
         vec2 noise = curlNoise(puv, uTime);
 
-        vec3 finalPosition = vec3(p + iPosition);
+
+        vec3 finalPosition = vec3(p + iPosition * uSpacing);
         // center the material based on the texture
-        finalPosition.x += -uTextureSize.x/2. + iAngle * noise.x;
-        finalPosition.y += -uTextureSize.y/2. + iAngle * noise.y;
+        finalPosition.x += -center.x  + iAngle * noise.x;
+        finalPosition.y += -center.y + iAngle * noise.y;
         finalPosition.z += sin(uTime * iAngle);
 
         

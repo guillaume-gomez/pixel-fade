@@ -24,6 +24,7 @@ export interface Config {
     fbmFrequency: number;
     fbmSpeed: number;
     size: number;
+    offset: number;
     optimised: boolean;
     geometryType: GeometryType;
     luminance: number;
@@ -52,7 +53,6 @@ function instancedBufferGeometry(
     
     // Builds instanced data for the packing
     const objectData = useMemo(() => {
-        
         // setup buffer geometry
         const geometry = pickGeometry(config.geometryType)
         
@@ -127,6 +127,7 @@ function instancedBufferGeometry(
                 uFbmAmplitude={config.fbmAmplitude}
                 uFbmFrequency={config.fbmFrequency}
                 uFbmSpeed={config.fbmSpeed}
+                uSpacing={config.spacing}
             />
             }
         </mesh>
