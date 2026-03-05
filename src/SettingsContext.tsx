@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, type ReactNode } from 'react';
 import { type GeometryType } from "./Three/ParticleWithBufferGeometry/InstancedBufferGeometry.tsx";
 
 export interface SettingsContextParams {
@@ -29,7 +29,7 @@ export interface SettingsContextParams {
 export const SettingsContext = createContext<SettingsContextParams>(null);
 
 interface Props {
-  children: ReacNode;
+  children: ReactNode;
 }
 
 function SettingsContextWrapper({children}: Props) {
