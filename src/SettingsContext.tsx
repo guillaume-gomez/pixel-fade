@@ -33,7 +33,7 @@ interface Props {
 }
 
 function SettingsContextWrapper({children}: Props) {
-  const [image, setImage] = useState<HTMLImageElement>();
+  const [image, setImage] = useState<HTMLImageElement>(null);
   const [width, setWidth] =  useState<number>(200);
   const [height, setHeight] =  useState<number>(200);
   const [geometryType, setGeometryType] = useState<GeometryType>("rounded");

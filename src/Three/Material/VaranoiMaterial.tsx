@@ -1,10 +1,9 @@
 import { useRef } from "react"; 
-import { Vector2 } from "three";
+import { Vector2, type ShaderMaterial } from "three";
 import { extend, useFrame } from "@react-three/fiber";
 import VaranoiShaderMaterial from "./VaranoiShaderMaterial";
 
-
-extend({ VaranoiShaderMaterial });
+const VaranoiShaderMaterialComponent = extend(VaranoiShaderMaterial);
 
 interface VaranoiMaterialProps {
 	width: number;
@@ -13,7 +12,7 @@ interface VaranoiMaterialProps {
 }
 
 function VaranoiMaterial({width, height, mousePosition} : VaranoiMaterialProps) {
-  const ref = useRef(null);
+  const ref = useRef<ShaderMaterial>(null);
 
   useFrame((state) => {
     const { clock } = state;
@@ -23,7 +22,7 @@ function VaranoiMaterial({width, height, mousePosition} : VaranoiMaterialProps) 
     ref.current.uniforms.uTime.value = clock.getElapsedTime();
   });
 
-	return <varanoiShaderMaterial
+	return <VaranoiShaderMaterialComponent
     ref={ref}
 		uTime={1.0}
 		uResolution={new Vector2(width, height)}

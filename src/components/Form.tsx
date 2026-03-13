@@ -1,11 +1,12 @@
 import { useContext, useState, useEffect } from "react";
 import InputFileWithPreview from "./InputFileWithPreview";
-import Range from ".//Range";
+import Range from "./Range";
 import Select from "./Select";
 import sample from '/spectrum-colors-arranged-by-chance-III.jpg';
 import { resizeImage, getAverageBackground } from "../utils";
 import { useSpring, animated } from '@react-spring/web';
 import { SettingsContext } from "../SettingsContext";
+import { type GeometryType } from "../Three/ParticleWithBufferGeometry/InstancedBufferGeometry.tsx";
 
 
 function Form() {
@@ -122,7 +123,7 @@ function Form() {
         <Select
           label="geometry type"
           value={geometryType}
-          onChange={(newValue) => setGeometryType(newValue)}
+          onChange={(newValue) => setGeometryType(newValue as GeometryType)}
           options={
             [
               {value: "rounded", label: "Rounded"},
