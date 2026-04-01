@@ -48,21 +48,21 @@ function instancedBufferGeometry(
 }: instancedBufferGeometryProps ) {
     //useHelper(ref, BoxHelper, 'red');
     const [texture] = useLoader(TextureLoader, [base64Texture]);
- 
+
     const maxNumberOfInstances = width * height;
-    
+
     // Builds instanced data for the packing
     const objectData = useMemo(() => {
         // setup buffer geometry
         const geometry = pickGeometry(config.geometryType)
-        
+
         // setup arrays
         const positionsArray = new Float32Array(maxNumberOfInstances * 3);
         const anglesArray = new Float32Array(maxNumberOfInstances);
         // used for optimisation
         const indicesArray = new Uint16Array(maxNumberOfInstances); 
 
-        // Build per-instance attributes. 
+        // Build per-instance attributes.
         let count = 0
         for(let i = 0; i < maxNumberOfInstances; i++) {
             positionsArray[count] = (i % width);
@@ -72,7 +72,7 @@ function instancedBufferGeometry(
             anglesArray[i] = Math.random() * Math.PI;
             indicesArray[i] = i;
 
-            count += 3 
+            count += 3;
         }
 
         const positions = new InstancedBufferAttribute(positionsArray, 3);
