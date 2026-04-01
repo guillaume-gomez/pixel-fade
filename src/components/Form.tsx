@@ -6,7 +6,7 @@ import sample from '/spectrum-colors-arranged-by-chance-III.jpg';
 import { resizeImage, getAverageBackground } from "../utils";
 import { useSpring, animated } from '@react-spring/web';
 import { SettingsContext } from "../SettingsContext";
-import { type GeometryType } from "./Three/ParticleWithBufferGeometry/InstancedBufferGeometry.tsx";
+import { type GeometryType } from "../Three/ParticleWithBufferGeometry/InstancedBufferGeometry.tsx";
 
 
 function Form() {

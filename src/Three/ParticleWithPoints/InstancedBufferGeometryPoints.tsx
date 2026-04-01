@@ -79,14 +79,12 @@ function InstancedBufferGeometryPoints(
         <bufferAttribute
           attach="attributes-position"
           count={objectData.positionsArray.length / 3}
-          array={objectData.positionsArray}
-          itemSize={3}
+          args={[objectData.positionsArray, 3]}
         />
         <bufferAttribute
           attach="attributes-speed"
           count={objectData.speedArray.length}
-          array={objectData.speedArray}
-          itemSize={1}
+          args={[objectData.speedArray, 1]}
         />
       </bufferGeometry>
       {/*  @ts-ignore */

@@ -2,7 +2,7 @@ import { useRef, Suspense, useEffect, useState, useContext } from 'react';
 import { SettingsContext } from "../SettingsContext";
 
 import { Canvas } from '@react-three/fiber';
-import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls } from '@react-three/drei';
+import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls, PerformanceMonitor } from '@react-three/drei';
 import { type Mesh} from "three";
 import FallBackLoader from "./FallBackLoader";
 import { EffectComposer, Vignette, Bloom } from '@react-three/postprocessing';
@@ -27,13 +27,15 @@ function ThreejsRenderer({
   const {
     width,
     height,
-    backgroundColor
+    backgroundColor,
+    setGeometryType
   } = useContext(SettingsContext);
 
   const meshRef = useRef<Mesh|null>(null);
   const cameraControllerRef = useRef<CameraControls>(null);
   const [vignetteDarkness, setVignetteDarkness] = useState<number>(1.5);
   const [_chromaticOffset, setChromaticOffset] = useState<number>(0.0025);
+  const [dpr, setDpr] = useState<number>(1);
 
   useEffect(() => {
     if(!base64Texture) {
@@ -45,7 +47,7 @@ function ThreejsRenderer({
       setTimeout(() => {
         recenter();
       }, 4000);
-      
+
       return;
     }
 
@@ -89,7 +91,7 @@ function ThreejsRenderer({
       >
         <Canvas
           camera={{ position: [0,0, 250], fov: 75, far: 500 }}
-          dpr={window.devicePixelRatio}
+          dpr={Math.max(dpr, window.devicePixelRatio)}
           shadows
           id="three-js-renderer"
         >
@@ -99,11 +101,17 @@ function ThreejsRenderer({
           <fog attach="fog" args={['red', 20, -5]} />
           <pointLight position={[10, 10, 10]} intensity={1} castShadow />
             <Stage adjustCamera={false} intensity={1} shadows="contact" environment={"sunset"}>
+              <PerformanceMonitor
+                  bounds={() => [60, 500]} // frame/second limit to trigger functions
+                  flipflops={1} // maximum changes before onFallback
+                  onDecline={() => {
+                    setDpr(dpr * 0.8); // lower dpr by 20%
+                    setGeometryType("rectangle");
+                  }}
+               >
                 <ambientLight intensity={0.5} />
                 <spotLight position={[0, 10, 0]} intensity={0.3} />
                 <directionalLight position={[-50, 0, -40]} intensity={0.7} />
-                
-                 
                 <Suspense fallback={<FallBackLoader/>} >
                   { !base64Texture && <Intro /> }
 
@@ -111,7 +119,7 @@ function ThreejsRenderer({
                     base64Texture &&
                     <InstanceMesh
                       width={width}
-                      height={height} 
+                      height={height}
                       base64Texture={base64Texture as string}
                       config={config}
                       ref={meshRef}
@@ -119,15 +127,15 @@ function ThreejsRenderer({
                   }
                   {/*<InstancedBufferGeometryPoints
                     width={width}
-                    height={height} 
+                    height={height}
                     base64Texture={base64Texture as string}
                     config={config}
                     ref={meshRef} />*/}
-                
                   { MODE === "development" &&
                     <Grid args={[1000, 1000]} position={[0,0,0]} cellColor='green' />
                   }
-              </Suspense>
+                </Suspense>
+              </PerformanceMonitor>
             </Stage>
           { MODE === "development" &&
             <GizmoHelper alignment="bottom-right" margin={[100, 100]}>

@@ -40,7 +40,7 @@ const SceneTest = () => {
       <color attach="background" args={["#0007A6"]} />
       <Suspense fallback={<FallbackLoader/>}>
         
-          <FBOParticles />
+          <FBOParticles red={red} />
           <Box
             args={[1, 1, 1]} // Width, height, depth. Default is [1, 1, 1]
             radius={0.05} // Radius of the rounded corners. Default is 0.05
