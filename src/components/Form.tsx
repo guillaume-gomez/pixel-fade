@@ -1,13 +1,15 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, type CSSProperties } from "react";
 import InputFileWithPreview from "./InputFileWithPreview";
 import Range from "./Range";
 import Select from "./Select";
 import sample from '/spectrum-colors-arranged-by-chance-III.jpg';
 import { resizeImage, getAverageBackground } from "../utils";
-import { useSpring, animated } from '@react-spring/web';
+import { useSpring, animated, type AnimatedProps } from '@react-spring/web';
+
 import { SettingsContext } from "../SettingsContext";
 import { type GeometryType } from "../Three/ParticleWithBufferGeometry/InstancedBufferGeometry.tsx";
 
+type AnimationProps = AnimatedProps<CSSProperties>
 
 function Form() {
   const {
@@ -39,15 +41,8 @@ function Form() {
     strokeWidth: "2px",
     strokeLinecap: "round",
     strokeLinejoin: "round",
-    d: collapse ? "M 2,4 L 8,12 L 14,4" : "M 2,14 L 8,4 L 14,14"
-  });
-
-  useEffect(() => {
-    setTimeout(() => {
-      startDefaultImage();
-    }, timerIntroInMs);
-
-  }, []);
+     d: collapse ? "M 2,4 L 8,12 L 14,4" : "M 2,14 L 8,4 L 14,14"
+   });
 
   function scrollIntoCanvas() {
     const element = document.getElementById("three-js-renderer");
@@ -62,7 +57,7 @@ function Form() {
     setBackgroundColor(getAverageBackground(newImage));
 
     // if width is wider limit the width or vise versa
-    const expectedWidth = newImage.width > newImage.height ? 
+    const expectedWidth = newImage.width > newImage.height ?
       200 :
       Math.floor(newImage.width/newImage.height * 200)
     ;
@@ -71,10 +66,10 @@ function Form() {
       Math.floor(newImage.height/newImage.width * 200) :
       200
     ;
-    
+
     const resizedImage = resizeImage(newImage, expectedWidth, expectedHeight);
     setImage(resizedImage);
-    
+
     setWidth(expectedWidth);
     setHeight(expectedHeight);
 
@@ -86,10 +81,17 @@ function Form() {
   function startDefaultImage() {
     const image = new Image();
     image.onload = () => {
-      uploadImage(image);  
+      uploadImage(image);
     }
     image.src = sample;
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      startDefaultImage();
+    }, timerIntroInMs);
+
+  }, []);
 
   if(firstRender) {
     return <></>;
@@ -113,13 +115,13 @@ function Form() {
             </svg>
         </button>
       </div> 
-       
-      <animated.div style={springsForm} className="card-body p-0">
-        <InputFileWithPreview 
+
+      <animated.div style={springsForm as AnimationProps} className="card-body p-0">
+        <InputFileWithPreview
           onChange={uploadImage}
           value={image}
         />
-     
+
         <Select
           label="geometry type"
           value={geometryType}

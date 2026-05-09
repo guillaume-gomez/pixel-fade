@@ -35,7 +35,7 @@ function Intro() {
       <AnimatedText3D
         position-z={springs.z}
         size={23 * sizeRatio }
-        font="/Roinert Squared_Italic.json"
+        font="/pixel-fade/Roinert Squared_Italic.json"
         curveSegments={32}
         bevelEnabled
         bevelSize={0.04}
@@ -55,7 +55,7 @@ function Intro() {
         </animated.meshStandardMaterial>
       </AnimatedText3D>
      </Center>
-   	);               
+   	);
 }
 
 export default Intro;
