@@ -50,7 +50,7 @@ function Intro() {
         <animated.meshStandardMaterial transparent={true} opacity={springs.opacity}>
           <GradientTexture
             stops={[0, 1]} // As many stops as you want
-            colors={['aquamarine', 'hotpink']} // Colors need to match the number of stops
+            colors={['#aa9900', '#ffffff']} // Colors need to match the number of stops
             size={1024} // Size is optional, default = 1024
           />
         </animated.meshStandardMaterial>
