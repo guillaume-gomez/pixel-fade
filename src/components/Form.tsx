@@ -37,11 +37,7 @@ function Form() {
   });
 
   const springsIcon = useSpring({
-    stroke: "white",
-    strokeWidth: "2px",
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-     d: collapse ? "M 2,4 L 8,12 L 14,4" : "M 2,14 L 8,4 L 14,14"
+    d: collapse ? "M 2,4 L 8,12 L 14,4" : "M 2,14 L 8,4 L 14,14"
    });
 
   function scrollIntoCanvas() {
@@ -109,7 +105,7 @@ function Form() {
           onClick={() => setCollapse(!collapse)}>
             <svg viewBox="0 0 16 16" width={20} height={20}>
               <animated.path
-                style={springsIcon}
+                style={{stroke: "white", strokeWidth: "2px", strokeLinecap: "round", strokeLinejoin: "round"}}
                 d={springsIcon.d}
               />
             </svg>
