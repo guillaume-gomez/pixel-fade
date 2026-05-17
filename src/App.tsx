@@ -19,7 +19,7 @@ function App() {
 
 
   return (
-    <div className="w-full h-screen sm:px-4 sm:d-flex sm:flex-column ">
+    <div className="w-full h-screen flex flex-col gap-2 px-4 lg:p-0 lg:block">
       <Title />
 
       <div className="w-full h-full">
