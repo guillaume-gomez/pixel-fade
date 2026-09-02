@@ -1,5 +1,12 @@
 # Pixel Fade
 
+Convert any images into particules dance
+
+
+<img width="1009" height="793" alt="Capture d’écran 2026-09-02 à 14 14 00" src="https://github.com/user-attachments/assets/4e55c24f-de65-4cd2-8658-4138c1ab9238" />
+<img width="1073" height="630" alt="Capture d’écran 2026-09-02 à 14 14 28" src="https://github.com/user-attachments/assets/73f86de6-374d-49f5-9b04-5cf31883c584" />
+
+
 https://gist.github.com/sortofsleepy/984d9d766b9f437280ce5294a9104947/revisions
 https://tympanus.net/codrops/2019/01/17/interactive-particles-with-three-js/
 https://tympanus.net/codrops/2025/12/10/simulating-life-in-the-browser-creating-a-living-particle-system-for-the-untillabs-website/?ref=dailydev
