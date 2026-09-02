@@ -98,9 +98,8 @@ function ThreejsRenderer({
           { import.meta.env.MODE === "development" ? <Stats/> : <></> }
           <ambientLight intensity={1.5} />
           <color attach="background" args={[backgroundColor]} />
-          <fog attach="fog" args={['red', 20, -5]} />
           <pointLight position={[10, 10, 10]} intensity={1} castShadow />
-            <Stage adjustCamera={false} intensity={1} shadows="contact" environment={"sunset"}>
+            <Stage adjustCamera={false} intensity={1} shadows={false} environment={"sunset"}>
               <PerformanceMonitor
                   bounds={() => [30, 500]} // frame/second limit to trigger functions
                   flipflops={1} // maximum changes before onFallback
