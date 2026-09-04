@@ -25,7 +25,6 @@ export interface Config {
     fbmFrequency: number;
     fbmSpeed: number;
     size: number;
-    offset: number;
     optimised: boolean;
     geometryType: GeometryType;
     luminance: number;

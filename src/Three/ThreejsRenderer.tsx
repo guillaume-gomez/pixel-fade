@@ -3,7 +3,7 @@ import { SettingsContext } from "../SettingsContext";
 
 import { Canvas } from '@react-three/fiber';
 import { GizmoHelper, GizmoViewport, Stage, Grid, Stats, CameraControls, PerformanceMonitor } from '@react-three/drei';
-import { type Mesh} from "three";
+import { type Mesh, type PerspectiveCamera } from "three";
 import FallBackLoader from "./FallBackLoader";
 import { EffectComposer, Vignette, Bloom } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
@@ -80,14 +80,14 @@ function ThreejsRenderer({
     return newval;
   }
 
-  function onUpdateCamera(camera: CameraControls) {
+  function onUpdateCamera(camera: PerspectiveCamera) {
     updateCameraFarProperty(camera);
 
     const cameraZ = camera.position.z;
     fromCameraZPositionToVignetteDarkness(cameraZ)
   }
 
-  function updateCameraFarProperty(camera: CameraControls) {
+  function updateCameraFarProperty(camera: PerspectiveCamera) {
     const farCandidate = Math.max(1, spacing) * 500;
     const needChangeFar = farCandidate != camera.far;
 
