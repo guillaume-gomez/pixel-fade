@@ -28,7 +28,8 @@ function ThreejsRenderer({
     width,
     height,
     backgroundColor,
-    setGeometryType
+    setGeometryType,
+    spacing
   } = useContext(SettingsContext);
 
   const meshRef = useRef<Mesh|null>(null);
@@ -79,6 +80,23 @@ function ThreejsRenderer({
     return newval;
   }
 
+  function onUpdateCamera(camera: CameraControls) {
+    updateCameraFarProperty(camera);
+
+    const cameraZ = camera.position.z;
+    fromCameraZPositionToVignetteDarkness(cameraZ)
+  }
+
+  function updateCameraFarProperty(camera: CameraControls) {
+    const farCandidate = Math.max(1, spacing) * 500;
+    const needChangeFar = farCandidate != camera.far;
+
+    if(needChangeFar) {
+      camera.far = Math.max(1, spacing) * 500;
+      camera.updateProjectionMatrix();
+    }
+  }
+
   function fromCameraZPositionToVignetteDarkness(cameraZ: number) {
     setVignetteDarkness(minMax([10, 200], [1.5, 0.5], cameraZ));
     setChromaticOffset(minMax([10, 200], [0, 0.0025], cameraZ));
@@ -90,7 +108,7 @@ function ThreejsRenderer({
         className="hover:cursor-grabbing w-full h-full rounded-xl"
       >
         <Canvas
-          camera={{ position: [0,0, 250], fov: 75, far: 500 }}
+          camera={{ position: [0,0, 250], fov: 75, far: 1000 }}
           dpr={Math.max(dpr, window.devicePixelRatio)}
           shadows
           id="three-js-renderer"
@@ -163,8 +181,8 @@ function ThreejsRenderer({
             minAzimuthAngle={-0.55}
             maxAzimuthAngle={0.55}
             minDistance={10}
-            maxDistance={200}
-            onUpdate={(e: any) => fromCameraZPositionToVignetteDarkness(e.target._camera.position.z) }
+            maxDistance={200 * Math.max(1, spacing * 0.8)}
+            onUpdate={(e: any) => onUpdateCamera(e.target._camera) }
           />
         </Canvas>
       </div>

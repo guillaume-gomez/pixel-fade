@@ -11,6 +11,7 @@ function App() {
     image,
     geometryType,
     size,
+    spacing,
     fbmFrequency,
     fbmSpeed,
     fbmAmplitude,
@@ -27,6 +28,7 @@ function App() {
           base64Texture={image?.src}
           config={{
             geometryType,
+            spacing,
             size,
             fbmFrequency,
             fbmSpeed,

@@ -18,6 +18,7 @@ function Form() {
     setHeight,
     geometryType, setGeometryType,
     size, setSize,
+    spacing, setSpacing,
     fbmFrequency, setFbmFrequency,
     fbmSpeed, setFbmSpeed,
     fbmAmplitude, setFbmAmplitude,
@@ -146,6 +147,15 @@ function Form() {
           min={1.0}
           max={4.0}
           step={0.1}
+          float={true}
+        /> 
+        <Range 
+          label="Spacing"
+          value={spacing}
+          onChange={(value) => setSpacing(value)}
+          min={1.0}
+          max={5.0}
+          step={0.01}
           float={true}
         /> 
         <Range 
