@@ -1,4 +1,4 @@
-import { OrbitControls, Box } from "@react-three/drei";
+import { OrbitControls, RoundedBox } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useRef, useState, Suspense } from "react";
 import { 
@@ -41,7 +41,7 @@ const SceneTest = () => {
       <Suspense fallback={<FallbackLoader/>}>
         
           <FBOParticles red={red} />
-          <Box
+          <RoundedBox
             args={[1, 1, 1]} // Width, height, depth. Default is [1, 1, 1]
             radius={0.05} // Radius of the rounded corners. Default is 0.05
             steps={1} // Extrusion steps. Default is 1
@@ -55,7 +55,7 @@ const SceneTest = () => {
               height={200}
               mousePosition={new Vector2(1,1)}
             />
-          </Box>
+          </RoundedBox>
           <Grid args={[1000, 1000]} position={[0,0,0]} cellColor='green' />
         
         <GizmoHelper alignment="bottom-right" margin={[100, 100]}>

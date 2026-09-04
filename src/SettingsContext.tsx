@@ -28,14 +28,14 @@ export interface SettingsContextParams {
   setFirstRender: (render: boolean) => void;
   timerIntroInMs: number;
 }
-export const SettingsContext = createContext<SettingsContextParams>(null);
+export const SettingsContext = createContext<SettingsContextParams>(null!);
 
 interface Props {
   children: ReactNode;
 }
 
 function SettingsContextWrapper({children}: Props) {
-  const [image, setImage] = useState<HTMLImageElement>(null);
+  const [image, setImage] = useState<HTMLImageElement>(null!);
   const [width, setWidth] =  useState<number>(200);
   const [height, setHeight] =  useState<number>(200);
   const [spacing, setSpacing] = useState<number>(1);

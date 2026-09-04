@@ -3,6 +3,7 @@ import { easings } from '@react-spring/web';
 import { useSpring, animated } from '@react-spring/three';
 import { useContext } from "react";
 import { SettingsContext } from "../SettingsContext";
+const { BASE_URL } = import.meta.env;
 
 const AnimatedText3D = animated(Text3D);
 
@@ -35,7 +36,7 @@ function Intro() {
       <AnimatedText3D
         position-z={springs.z}
         size={23 * sizeRatio }
-        font="/Roinert Squared_Italic.json"
+        font={`${BASE_URL}/Roinert Squared_Italic.json`}
         curveSegments={32}
         bevelEnabled
         bevelSize={0.04}
@@ -49,13 +50,13 @@ function Intro() {
         <animated.meshStandardMaterial transparent={true} opacity={springs.opacity}>
           <GradientTexture
             stops={[0, 1]} // As many stops as you want
-            colors={['aquamarine', 'hotpink']} // Colors need to match the number of stops
+            colors={['#aa9900', '#ffffff']} // Colors need to match the number of stops
             size={1024} // Size is optional, default = 1024
           />
         </animated.meshStandardMaterial>
       </AnimatedText3D>
      </Center>
-   	);               
+   	);
 }
 
 export default Intro;

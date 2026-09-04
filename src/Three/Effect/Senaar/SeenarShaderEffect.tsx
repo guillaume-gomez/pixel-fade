@@ -23,7 +23,7 @@ class SenaarEffect extends Effect {
   /**
    * Map of uniforms used by the shader
    */
-  uniforms: Map<string, THREE.Uniform<number | THREE.Vector2>>;
+  uniforms: Map<string, THREE.Uniform<number | THREE.Vector2 | THREE.Color | boolean>>;
 
   /**
    * Creates a new dithering effect instance
@@ -127,8 +127,12 @@ class SenaarEffect extends Effect {
 }
 
 
+interface SenaarEffectWrapperProps {
+  param: SenaarEffectOptions;
+}
+
 // Effect component
-const SenaarEffectWrapper = forwardRef(({ param } : SenaarEffectOptions, ref) => {
+const SenaarEffectWrapper = forwardRef(({ param } : SenaarEffectWrapperProps, ref) => {
   const effect = useMemo(() => new SenaarEffect(param), [param])
   return <primitive ref={ref} object={effect} dispose={null} />
 });

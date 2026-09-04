@@ -1,10 +1,10 @@
 import { shaderMaterial } from "@react-three/drei";
-import { Vector2 } from "three";
+import { Texture, Vector2 } from "three";
 
 
 const MaterialPointFBO = shaderMaterial(
-  { 
-    uTexture: null,
+  {
+    uTexture: null as Texture | null,
     uTextureSize: new Vector2(),
     uTime: 0.0,
     uPositions: null,
