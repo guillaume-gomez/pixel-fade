@@ -20,6 +20,7 @@ extend({ PixelsFadeMaterial });
 export type GeometryType = "rounded"|"rectangle"|"circle";
 
 export interface Config {
+    spacing: number;
     fbmAmplitude: number;
     fbmFrequency: number;
     fbmSpeed: number;
@@ -103,7 +104,7 @@ function instancedBufferGeometry(
         case "rounded":
             return RoundedPlane( 1, 1, 0.2, 18 );
         case "circle":
-            return new CircleGeometry( 1, 18 );
+            return new CircleGeometry( 0.5, 18 );
         case "rectangle":
         default:
             return new PlaneGeometry(1, 1, 1, 1);
@@ -113,6 +114,7 @@ function instancedBufferGeometry(
     return (
         <mesh ref={ref}>
             <instancedBufferGeometry
+                key={config.geometryType}
                 instanceCount={maxNumberOfInstances}
                 index={objectData.index}
                 attributes={objectData.attribs}
