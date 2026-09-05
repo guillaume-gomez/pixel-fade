@@ -7,7 +7,8 @@ Convert any images into particules dance
 <img width="1073" height="630" alt="Capture d’écran 2026-09-02 à 14 14 28" src="https://github.com/user-attachments/assets/73f86de6-374d-49f5-9b04-5cf31883c584" />
 <img width="1020" height="668" alt="Capture d’écran 2026-09-02 à 14 30 11" src="https://github.com/user-attachments/assets/433b4d28-0b84-4cff-a24b-cb9c31a160d1" />
 <img width="699" height="878" alt="Capture d’écran 2026-09-02 à 14 30 37" src="https://github.com/user-attachments/assets/37ab6f30-898e-449c-9087-46fa2f35ae82" />
-
+<img width="844" height="839" alt="Capture d’écran 2026-09-05 à 18 32 02" src="https://github.com/user-attachments/assets/8c33ce5e-e6b1-4266-a760-8c16c8a16ab6" />
+<img width="729" height="703" alt="Capture d’écran 2026-09-05 à 18 31 19" src="https://github.com/user-attachments/assets/1bda2c0d-a3a1-4d91-a49f-40a6f35e8b07" />
 
 
 https://gist.github.com/sortofsleepy/984d9d766b9f437280ce5294a9104947/revisions
